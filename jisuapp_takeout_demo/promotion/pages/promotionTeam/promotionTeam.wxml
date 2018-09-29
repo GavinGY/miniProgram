@@ -1,0 +1,29 @@
+<component-getUserInfo showGetUserInfo="{{showGetUserInfo}}"></component-getUserInfo>
+<view class="table-header">
+  <view>我的粉丝</view>
+  <view>联系方式</view>
+  <view>贡献佣金</view>
+</view>
+<view class="table-section">
+  <view class="table-row" wx:for="{{ personArr }}" wx:key="">
+    <view class="table-cell">{{ item.name }}</view>
+    <view class="table-cell">{{ item.phone }}</view>
+    <view class="table-cell">{{ item.total_commission }}</view>
+  </view>
+<!-- <view class="table-row">
+  <view class="table-cell">王神仙</view>
+  <view class="table-cell">13813813888</view>
+  <view class="table-cell">52.00</view>
+</view>
+<view class="table-row">
+  <view class="table-cell">王神仙</view>
+  <view class="table-cell">13813813888</view>
+  <view class="table-cell">20.50</view>
+</view> -->
+</view>
+<view class="navigator-footer" wx:if="{{ totalPage > 1 }}">
+	<view class="navitaor-btn" bindtap="prevPage">上一页</view>
+	<text>{{ currentPage || 1 }}/{{ totalPage || 10 }}</text>
+	<view class="navitaor-btn" bindtap="nextPage">下一页</view>
+</view>
+

@@ -1,0 +1,37 @@
+page {
+  padding: 0 28rpx;
+  width: auto;
+}
+.top-section {
+  padding: 32rpx;
+  border-bottom: 1px solid #e5e5e5;
+  text-align: center;
+}
+.middle-section-item {
+  padding: 16rpx 0;
+  border-bottom: 1px solid #e5e5e5;
+}
+.middle-section-item:last-child{
+  margin-bottom: 140rpx;
+}
+.middle-section-item .title {
+  font-size: 32rpx;
+  color: #333;
+  margin: 20rpx 0;
+}
+.middle-section-item .detail {
+  font-size: 28rpx;
+  color: #666;
+}
+.middle-section-item .detail text{
+  color: #ff7100;
+}
+.bottom-section {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  text-align: center;
+  background:#fff;
+  padding:40rpx 0;
+}

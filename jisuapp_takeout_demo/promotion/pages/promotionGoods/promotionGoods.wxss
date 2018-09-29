@@ -1,0 +1,82 @@
+page {
+  background-color: #f4f4f4;
+}
+.table-header {
+  display: -webkit-flex;
+  display: flex;
+  padding: 34rpx 0;
+  line-height: 34rpx;
+  text-align: center;
+  color: #fff;
+  background-color: #ff7100;
+}
+.table-header view {
+  -webkit-flex: 1;
+  flex: 1;
+  font-size: 28rpx;
+  border-right: 1px solid #ff8b50;
+}
+.table-header view:last-child {
+  border-right: none;
+}
+.table-section {
+  margin: 20rpx 0;
+  font-size: 28rpx;
+  color: #666;
+  background-color: #fff;
+}
+.table-row {
+  display: -webkit-flex;
+  display: flex;
+  border-bottom: 1px solid #ddd;
+}
+.table-row:last-child {
+  border-bottom: none;
+}
+.table-cell {
+  -webkit-flex: 1;
+  flex: 1;
+  line-height: 80rpx;
+  border-right: 1px solid #ddd;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: center;
+}
+.table-cell:last-child {
+  border-right: none;
+}
+.navigator-footer {
+  position: fixed;
+  bottom: 56rpx;
+  left: 0;
+  right: 0;
+  font-size: 28rpx;
+  text-align: center;
+}
+.navitaor-btn {
+  margin: 0 10px;
+  display: inline-block;
+  width: 118rpx;
+  height: 56rpx;
+  line-height: 56rpx;
+  border-radius: 4px;
+  color: #fff;
+  background-color: #ff7100;
+}
+.navigator-btn.disbaled {
+  background-color: #dedede;
+}
+.menu-list {
+  display: flex;
+  padding:20rpx 0;
+  background: #fff;
+}
+.menu-list view {
+  flex: 1;
+  text-align: center;
+  border-right: 1px solid #ddd;
+}
+.menu-list .active {
+  color: #ff7100;
+}

@@ -1,0 +1,71 @@
+page {
+  background: #f3f3f3;
+}
+.logistics-header {
+  font-size: 26rpx;
+  color: #333;
+  padding: 20rpx 30rpx;
+  background: #fff;
+  margin-bottom: 10rpx;
+}
+.logistics-header .logistics-company {
+  margin-bottom: 10rpx;
+}
+.logistics-container {
+  background: #fff;
+  font-size: 24rpx;
+  padding: 30rpx 30rpx 0 30rpx;
+}
+.logistics-item::before {
+  content: '';
+  display: inline-block;
+  width: 14rpx;
+  height: 14rpx;
+  background: #D2D2D2;
+  border-radius: 50%;
+  position: absolute;
+  left: -7rpx;
+  top: 10rpx;
+  z-index: 1;
+}
+.logistics-item:first-child::before {
+  content: '';
+  display: inline-block;
+  width: 14rpx;
+  height: 14rpx;
+  background: #FF7100;
+  border-radius: 50%;
+  border: 6rpx solid #FFC699;
+  position: absolute;
+  left: -14rpx;
+  top: 4rpx;
+}
+.logistics-item::after {
+  content: '';
+  display: inline-block;
+  width: 1rpx;
+  height: 100%;
+  background: #EBEBEB;
+  position: absolute;
+  left: -1rpx;
+  top: 10rpx;
+}
+.logistics-item:last-child::after{
+  display: none;
+}
+.logistics-location {
+  margin-bottom: 15rpx;
+}
+.logistics-item:first-child .logistics-location  {
+  color: #333;
+}
+.logistics-item:first-child .logistics-time  {
+  color: #666;
+}
+.logistics-item {
+  padding-left: 30rpx;
+  position: relative;
+  padding-bottom: 50rpx;
+  color: #999;
+}
+

@@ -1,0 +1,18 @@
+<component-getUserInfo showGetUserInfo="{{showGetUserInfo}}"></component-getUserInfo>
+<view>
+  <view class="form-section">
+    <view class="upload-view" bindtap="uploadImage">
+      <image mode="scaleToFill" src="{{ hasShopCover}}"></image>
+    </view>
+  </view>
+  <view class="form-section">
+    <input placeholder="店铺名称" bindinput="inputShopName" value="{{ shopName }}"></input>
+  </view>
+  <view class="form-section">
+    <textarea placeholder="店铺介绍" bindinput="inputShopIntroduce" value="{{ shopIntroduce }}"></textarea>
+    <view class="tip-text">注：系统会为你的店铺分配商品</view>
+  </view>
+  <view class="form-section save-button-section">
+    <view class="save-button" bindtap="submitInfo">保存</view>
+  </view>
+</view>

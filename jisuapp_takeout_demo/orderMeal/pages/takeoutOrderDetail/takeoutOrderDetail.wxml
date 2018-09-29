@@ -1,0 +1,113 @@
+<component-reward-point rewardPointObj="{{rewardPointObj}}"></component-reward-point>
+<component-getUserInfo showGetUserInfo="{{showGetUserInfo}}"></component-getUserInfo>
+<view>
+  <view class="order-detail-section orderDetail-goto-homepage" bindtap="goToHomepage" style="margin-bottom:0;" wx:if="{{ isFromTemplateMsg }}">
+    <view class="ico-moon icon-rightarrow"></view>
+    返回首页
+  </view>
+  <view class="takeoutInfo">
+    <canvas wx:if="{{!isOverTime && orderInfo.take_out_info.deliver_type == 3 && (orderInfo.status == 1 || orderInfo.status == 2) }}" canvas-id='canvasArcCir' style='width: 160rpx;height: 160rpx;margin: 0 auto;'></canvas>
+    <view wx:if="{{isOverTime && orderInfo.take_out_info.deliver_type == 3 && orderInfo.status == 2}}">配送超时</view>
+    <image wx:if="{{orderInfo.take_out_info.deliver_type == 0 || (orderInfo.take_out_info.deliver_type == 3 && orderInfo.status != 1 && orderInfo.status != 2) }}" class="takeoutImage" src="{{orderData.take_out_info.cover}}"></image>
+    <view><text catchtap='turnToOrderTracking'>
+    {{(orderData.form_data.take_out_info.deliver_type == 0 || orderData.form_data.take_out_info.deliver_type == '') ? orderStatusText[orderInfo.status].name : (orderInfo.status == 2 ? transportStatus[orderInfo.take_out_transport_order.status] + '>' : orderStatusText[orderInfo.status].name) }} </text><view style="font-size: 24rpx;color:#999;margin-top:12rpx;font-weight: normal;">{{orderStatusText[orderInfo.status].orderName}}</view></view>
+    <view wx:if="{{ orderInfo.status == 3 }}"><text class="btn btn-orange myOrder-make-comment" bindtap="makeComment" data-id="{{ orderData.form_data.order_id }}" style="margin-top: 20rpx;padding: 10rpx 20rpx;color: #fff;background-color: #ff7100;">立即评价</text></view>
+  </view>
+  <view wx:if="{{ (orderInfo.status == 1 || orderInfo.status == 2) && orderInfo.take_out_info.deliver_type == 0}}" style="margin:20rpx;margin-top: 26rpx;padding:26rpx 30rpx;background:#fff;font-weight: 500;font-size: 28rpx;">预计送达时间 {{estimateTime}}</view>
+  <view class="order-detail-section" style='margin:20rpx;padding:26rpx 30rpx;' wx:if="{{transporterInfo && transporterInfo.statusCode >= 2}}">
+    <map catchtap="mapDetail" data-lat="{{transporterInfo.transporterLat}}" data-lng="{{transporterInfo.transporterLng}}" style="margin:0px auto 20rpx;width:100%;" longitude="{{transporterInfo.transporterLng}}" latitude="{{transporterInfo.transporterLat}}" scale="18" markers="{{marker}}" show-location="{{true}}"></map>
+    <image style="width: 74rpx;height: 74rpx;vertical-align: middle;margin-right: 16rpx;" src='http://test.zhichiwangluo.com/zhichi_frontend/static/webapp/images/waimai/transport.png'></image><text class='transport-name'>{{transporterInfo.transporterName || transporterInfo.statusMsg}}</text>
+    <text bindtap="makePhoneCall" data-phone="{{transporterInfo.transporterPhone}}" style='float:right;height: 74rpx;line-height: 74rpx;'><text class='ico-moon icon-tokeout-phone' style="display:inline-block;margin-right:10rpx;width:32rpx;height:32rpx;font-size:24rpx;font-weight:normal;color: #ff7100;"></text>联系</text>
+  </view>
+  <view class="order-detail-section" style="margin-bottom: 0; padding:0 30rpx; border-bottom: none;margin:20rpx;">
+    <view style="margin-top: 26rpx;padding:26rpx 0rpx;background:#fff;font-weight: 500;">订单信息</view>
+    <view class="goods-list-item" wx:for="{{ orderInfo.goods_info }}" wx:for-item="goods" wx:for-index="goodsIndex" wx:key="">
+        <view class="goods-content">
+          <view style="word-break: break-all;">{{ goods.goods_name }} <text wx:if="{{ goods.model_value }}" class="goods-model">({{ goods.model_value }})</text></view>
+        </view>
+        <view style="display:inline-block;width: 80rpx;font-weight: 600;font-size: 26rpx;vertical-align:middle;"><text class="ico-moon icon-closes"></text><text style="vertical-align: middle;">{{ goods.num }}</text></view>
+        <view style="display:inline-block;width: 100rpx;vertical-align: middle;font-size: 26rpx;text-align: right;"><text style="font-size:20rpx;">¥</text> {{ goods.price * goods.num }}</view>
+    </view>
+    <view class="order-detail-section" style="margin-bottom: 0;">配送费
+      <text class="pull-right" style="font-size:26rpx;"><text style="font-size:20rpx;">¥</text> {{ orderInfo.take_out_info.deliver_fee }}</text>
+    </view>
+    <view class="order-detail-section" style=" margin-bottom:0;border-bottom:none;">订单总价
+      <text class="pull-right" style="font-size:26rpx;"><text style="font-size:20rpx;">¥</text> {{ orderInfo.original_price }}</text>
+    </view>
+  </view>
+  <view class="order-detail-section" style="margin-bottom: 0; padding:0 30rpx; border-bottom: none;margin:20rpx;">
+    <view style="margin-top: 26rpx;padding:26rpx 0rpx;background:#fff;font-weight: 500;">优惠信息</view>
+    <view class="order-detail-section" style="margin-bottom: 0;border-bottom:none;">优惠抵扣
+      <text class="pull-right" style="font-size:26rpx;color:#ff7100;">-<text style="font-size:20rpx;margin: 0 6rpx">¥</text>{{ discount_cut_price }}</text>
+    </view>
+    <view class="order-detail-section" style="margin-bottom: 0; border-top:1px solid #f2f2f2;border-bottom:1px solid #f2f2f2;">储值抵扣
+      <text class="pull-right" style="color:#ff7100;font-size:26rpx;">-<text style="font-size:20rpx;margin: 0 6rpx">¥</text>{{ useBalance }}</text>
+    </view>
+    <view class="order-detail-section" wx:if="{{orderInfo.coupon_fee}}"  style="margin-bottom: 0;border-bottom:1px solid #f2f2f2;">社交立减金
+      <text class="pull-right" style="color:#ff7100;font-size:26rpx;">-<text style="font-size:20rpx;margin: 0 6rpx">¥</text>{{ orderInfo.coupon_fee }}</text>
+    </view>
+    <view class="order-detail-section" style="border-bottom:none;"><text style="color:#ff7100;"  bindtap="makePhoneCall" data-phone="{{orderData.take_out_info.phone}}"><text class="ico-moon icon-tokeout-phone" style="display:inline-block;margin-right:10rpx;width:32rpx;height:32rpx;font-size:24rpx;font-weight:normal;"></text>联系商家</text>
+      <text class="pull-right" style="font-size: 30rpx;font-weight:500;color: #333;"><text style="font-weight:normal;font-size: 26rpx;">实付</text> ¥{{ orderInfo.total_price }}</text>
+    </view>
+  </view>
+  <view class="order-detail-section" style="margin-bottom: 0; padding:0 30rpx; border-bottom: none;margin:20rpx;">
+    <view style="margin-top: 26rpx;padding:26rpx 0rpx;background:#fff;font-weight: 500;">配送信息</view>
+    <view class="order-detail-section" style="margin-bottom: 0;border-bottom:1px solid #f2f2f2;">配送方式<text class="pull-right" style="font-size: 26rpx;color: #666;">{{ orderInfo.take_out_info.deliver_type == 0 ? '商家配送' : '第三方配送' }}</text></view>
+    <view class="order-detail-section" style="border-bottom:none;">
+      <view class="" style="display:inline-block;width: 130rpx;vertical-align:top;">常用地址</view>
+      <view class="address-info-section" style="text-align:right;font-size:26rpx;vertical-align:middle;display:inline-block;width:calc(100% - 130rpx);color:#666;padding-top: 28rpx;" >
+        <view style="margin-bottom: 12rpx;display:inline-block;">{{ orderInfo.address_info.name }} {{ orderInfo.address_info.contact }}</view>
+        <view>{{ orderInfo.address_info.province.text + orderInfo.address_info.city.text + orderInfo.address_info.district.text + orderInfo.address_info.detailAddress }}</view>
+      </view>
+    </view>
+  </view>
+  <view class="order-detail-section" wx:if="{{ hasAdditionalInfo }}" bindtap="seeAdditionalInfo" style="border-top:1px solid #f2f2f2;margin:0 20rpx;padding:26rpx 30rpx;border: none;">补充信息
+    <view class="ico-moon icon-rightarrow pull-right"></view>
+  </view>
+  <view class="order-detail-section" wx:if="{{ orderInfo.remark }}" style="border-top:1px solid #f2f2f2;padding:26rpx 30rpx;margin:0 20rpx 18rpx;">
+    <view class="section-title">留言</view>
+    <view class="section-content" style="word-break:break-all;display: block;margin: 20rpx 0 0;white-space: normal;overflow: auto;width: 100%;height: auto;text-align: left;color:#666;">{{ orderInfo.remark }}</view>
+  </view>
+  <view class="order-detail-section" style="margin-bottom: 0; padding:0 30rpx; border-bottom: none;margin:20rpx;">
+    <view style="margin-top: 26rpx;padding:26rpx 0rpx;background:#fff;font-weight: 500;">订单信息</view>
+    <view class="order-detail-section" style="margin-bottom: 0;border-bottom: 1px solid #f2f2f2;">下单时间 <text class="pull-right" style="font-size: 26rpx;color:#666;">{{ orderInfo.add_time }}</text></view>
+    <view style="padding:26rpx 0rpx;background:#fff;">订单编号<text class="pull-right" style="font-size: 26rpx;color:#666;">{{ orderInfo.order_id }}</text></view>
+  </view>
+  <view class="bottom-nav">
+    <view class="txt-r">
+      <block wx:if="{{ orderInfo.status == 0 }}">
+        <text class="btn" bindtap="cancelOrder">取消订单</text>
+        <text class="btn btn-orange orderDetail-pay-directly" bindtap="payOrder">立即支付</text>
+      </block>
+      <block wx:if="{{ orderInfo.status == 1 }}">
+        <text class="btn" bindtap="verificationCode">核销码</text>
+        <text class="btn" bindtap="applyDrawback">申请退款</text>
+      </block>
+      <block wx:if="{{ orderInfo.status == 2 }}">
+        <text class="btn btn-orange" bindtap="sureReceipt">确认收货</text>
+      </block>
+      <block wx:if="{{ orderInfo.status == 3 }}">
+        <text class="btn" bindtap="orderDelete">刪除订单</text>
+        <text class="btn btn-orange" bindtap="makeComment">去评价</text>
+      </block>
+      <block wx:if="{{ orderInfo.status == 4 }}">
+        <text>退款审核中</text>
+      </block>
+      <block wx:if="{{ orderInfo.status == 5 }}">
+        <!-- <text>退款中</text> -->
+        <text class="btn" bindtap="receiveDrawback">收到退款</text>
+      </block>
+      <block wx:if="{{ orderInfo.status == 6 }}">
+        <!-- <text>已完成</text> -->
+        <text class="btn" bindtap="orderDelete">刪除订单</text>
+      </block>
+      <block wx:if="{{ orderInfo.status == 7 }}">
+        <!-- <text>已关闭</text> -->
+        <text class="btn" bindtap="orderDelete">刪除订单</text>
+      </block>
+      <block wx:if="{{ orderInfo.status == 8 }}">
+        <text class="btn" bindtap="applyDrawback">申请退款</text>
+      </block>
+    </view>
+  </view>
+</view>

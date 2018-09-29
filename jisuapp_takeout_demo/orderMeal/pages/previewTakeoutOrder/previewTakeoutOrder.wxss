@@ -1,0 +1,156 @@
+page {
+  padding-bottom: 125rpx;
+  font-size: 29rpx;
+  color: #444;
+  background-color: #f2f2f2;
+}
+.preview-goods-order-section {
+  padding: 34rpx 36rpx;
+  margin-bottom: 16rpx;
+  background: #fdfdfd;
+  overflow: hidden;
+}
+.preview-address{
+  margin: 6px 0;
+  background-image: url(//test.zhichiwangluo.com/static/webapp/images/addressLine.jpg);
+  background-repeat: no-repeat;
+  background-size: 100% auto;
+}
+.icon-fesadress{
+  position: absolute;
+  left:-50rpx;
+  top:25rpx;
+  color: #ff7100;
+}
+.total-price text{
+  display: inline-block;
+}
+.preview-goods-order-list {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+.preview-goods-order-item {
+  position: relative;
+  padding: 25rpx 0;
+  border-bottom: 1px dashed #e8e8e8;
+}
+.preview-goods-order-item view {
+  display: inline-block;
+  vertical-align: middle;
+}
+.preview-goods-order-item:last-child {
+  border-bottom: none;
+}
+.preview-address-options {
+  position: absolute;
+  top: -5rpx;
+  right: 0;
+  font-size: 31rpx;
+  text-align: right;
+  color: #aaa;
+}
+.preview-goods-title {
+  font-size: 28rpx;
+  color: #535458;
+  white-space: nowrap;
+  overflow: hidden;
+  width: calc(100% - 90px);
+  text-overflow: ellipsis;
+}
+.preview-goods-model {
+  color: #9b9b9b;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width:100px;
+  font-size:22rpx;
+}
+.preview-goods-price {
+  display: inline-block;
+  vertical-align: middle;
+  font-size: 26rpx;
+  width: 50px;
+  text-align:right;
+}
+textarea {
+  width:auto;
+  height:80px;
+  padding:5px;
+  border:1px solid #eee;
+  border-radius:4px 4px 0 0;
+  background-color:#eee;
+  font-size:26rpx;
+  color:#666;
+}
+.preview-section-title {
+  margin-bottom: 16px;
+}
+.preview-section-title .icon-rightarrow {
+  float: right;
+  font-size: 29rpx;
+  color: #aaa;
+}
+.buy-goods-count{
+  display:inline-block;
+  width: 40px;
+  margin: 0;
+  box-sizing: content-box;
+  font-size: 26rpx;
+  text-align: left;
+  vertical-align: middle;
+  border: none;
+  color: #999;
+}
+.icon-closes:before{
+  font-size: 16rpx;
+}
+.select-discount-title {
+  font-size: 29rpx;
+  line-height: 24px;
+  color: #818181;
+}
+.bottom-nav {
+  line-height: 110rpx;
+  border-top:1px solid #eee;
+  font-size: 0;
+  background-color: #fff;
+  height: 110rpx;
+}
+.preview-goods-total-price {
+  display: inline-block;
+  width: calc(100% - 234rpx);
+  font-size: 33rpx;
+  vertical-align:middle;
+  color: #333;
+  text-align: left;
+  text-indent: 36rpx;
+}
+.bottom-nav form {
+  float: right;
+  width: 234rpx;
+}
+.bottom-nav button {
+  float: right;
+  width: 100%;
+  font-size: 33rpx;
+  border-radius: 0;
+  color: #fff;
+  background-color: #ff7100;
+  line-height: inherit;
+}
+.icon-location, .icon-phone {
+  font-size: 42rpx;
+  vertical-align: sub;
+  margin-right: 8px;
+}
+.price-count {
+  margin-right: 20rpx;
+  color: #ff7100;
+}
+.use-balance-option {
+  line-height: 32px;
+  overflow: hidden;
+}
+switch {
+  margin-right: -4px;
+}

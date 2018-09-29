@@ -1,0 +1,23 @@
+page {
+  font-size: 28rpx;
+}
+.top-section {
+  padding-top: 16rpx;
+  height: 316rpx;
+  background-color: #4d4d4d;
+  color: #fff;
+  text-align: center;
+}
+.customer-num {
+  margin-top: 76rpx;
+  font-size: 96rpx;
+}
+.bottom-section {
+  margin-top: 100rpx;
+  text-align: center;
+}
+.bottom-section image {
+  margin-top: 35rpx;
+  width: 376rpx;
+  height: 376rpx;
+}

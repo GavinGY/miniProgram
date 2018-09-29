@@ -1,0 +1,59 @@
+<component-getUserInfo showGetUserInfo="{{showGetUserInfo}}"></component-getUserInfo>
+<view>
+  <view class="table-header">
+    <view class="item">提现金额(元)</view>
+    <view class="item">提现时间</view>
+    <view class="item" bindtap="toggleStatusList">{{ selectStatus.statusName }}<text class="triangle"></text>状态
+      <view class="status-list" hidden="{{ hideStatusList }}">
+        <!-- <view wx:for="{{ statusList }}" data-index="{{ index }}" catchtap="clickStatus">{{ item.statusName }}</view> -->
+        <view data-index="-1" catchtap="clickStatus">全部</view>
+        <view data-index="0" catchtap="clickStatus">申请中</view>
+        <view data-index="1" catchtap="clickStatus">申请失败</view>
+        <view data-index="2" catchtap="clickStatus">待转账</view>
+        <view data-index="3" catchtap="clickStatus">转账失败</view>
+        <view data-index="4" catchtap="clickStatus">转账成功</view>
+      </view>
+    </view>
+  </view>
+  <view class="table-section">
+    <view class="table-row" wx:for="{{ withdrawArr }}" wx:key="">
+      <view class="table-cell">{{ item.withdraw }}</view>
+      <view class="table-cell">{{item.create_time}}</view>
+      <view class="table-cell" bindtap="{{(item.withdraw_type == 1 && item.status == '申请失败') || (item.withdraw_type == 1 && item.status == '转账成功') || (item.withdraw_type == 0 && item.status == '申请失败') ? 'singleDetail' :''}}" data-info="{{item}}">{{ item.status }}<text wx:if="{{(item.status != '申请中' && item.status != '待转账' && item.withdraw_type == 1) || (item.withdraw_type == 0 && item.status == '申请失败')}}" style='margin-left:20rpx;color:#ff7100;' class='ico-moon icon-for-notice'></text></view>
+    </view>
+  </view>
+  <view class="navigator-footer" wx:if="{{ totalPage > 1 }}">
+    <view style="color: #999;text-align: left;margin-left: 50rpx;margin-bottom: 50rpx;">注：线下转账才能申诉</view>
+    <view class="navitaor-btn" bindtap="prevPage">上一页</view>
+    <text>{{ currentPage || 1 }}/{{ totalPage || 10 }}</text>
+    <view class="navitaor-btn" bindtap="nextPage">下一页</view>
+  </view>
+</view>
+<view hidden="{{hidefaildialog}}" class='record-dialog' catchtap="hideFailDialog">
+  <view class="record-reason" catchtap='stopPropagation'>
+    <view class="reason-title">拒绝理由</view>
+    <view class="reason-content">{{singleRecord.reason}}</view>
+    <view class="record-fail-btn" catchtap="hideFailDialog">确定</view>
+  </view>
+</view>
+<view hidden="{{hidesuccessDialog}}" class='record-dialog' catchtap='hidesuccessDialog'>
+  <view class='success-dialog' catchtap='stopPropagation'>
+    <view class="dialog-close icon-close-btn ico-moon" catchtap='hidesuccessDialog'></view>
+      <view>商家转账截图</view>
+      <view style="margin: 30rpx 0;">
+        <image style="width: 488rpx;height: 488rpx;" mode="center" src='{{singleRecord.transfered_img}}' data-img="{{singleRecord.transfered_img}}" catchtap='previewImage'></image>
+      </view>
+      <view wx:if="{{singleRecord.feedbackLength != 0}}">反馈记录</view>
+      <block wx:for="{{singleRecord.feedback}}" wx:key="">
+      <view style='margin-bottom: 30rpx;color:#999;'>{{item.feedback}}</view>
+      </block>
+      <button catchtap="showFeedbackDialog" wx:if="{{singleRecord.feedbackLength == 0}}">我要反馈</button>
+  </view>
+</view>
+<view class='record-dialog' hidden='{{hideFeedbackDialog}}' catchtap='hideFeedbackDialog'>
+  <view class='success-dialog' style='margin-top:200rpx;' catchtap='stopPropagation'>
+    <view>我要反馈</view>
+    <textarea bindinput='feedbackText'></textarea>
+    <button catchtap="feedback">提交</button>
+  </view>
+</view>

@@ -1,0 +1,359 @@
+<import src="/components/wxParse/wxParse.wxml"/>
+<import src="/components/templates/templates.wxml"/>
+<view class="app" hidden="{{page_hidden}}">
+<web-view wx-if="{{false}}" src="{{false}}"></web-view>
+<component-share pageQRCodeData="{{pageQRCodeData}}"></component-share>
+<component-backhome backToHomePage="{{backToHomePage}}"></component-backhome>
+<component-reward-point rewardPointObj="{{rewardPointObj}}"></component-reward-point>
+<component-shop-vip shopVipModal="{{shopVipModal}}"></component-shop-vip>
+<component-getUserInfo showGetUserInfo="{{showGetUserInfo}}"></component-getUserInfo>
+<component-filter filterShow="{{filterShow}}" chooseCateId="{{categoryId}}" form="{{classifyGroupForm}}" bind:confirm="filterConfirm"></component-filter>
+<component-formPay formInfo="{{formInfo}}"></component-formPay>
+<component-community-publish communityPublish="{{communityPublish}}"></component-community-publish>
+<component-community-publish-type communityPublishType="{{communityPublishType}}"></component-community-publish-type>
+<component-goodsShoppingCart id="component-goodsShoppingCart" bind:afterSelectedGoods="afterSelectGoods"></component-goodsShoppingCart>
+
+<wxs module="price">
+var price = function(a, b){
+  var c = (a - b).toFixed(2);
+  return c
+}
+module.exports.price = price;
+</wxs>
+<template name="zcWaiMai">
+    <view class="ico-moon icon-fes_adress location-address" style="background-color:{{top_nav.navigationBarBackgroundColor || '#000'}};color:{{top_nav.navigationBarTextStyle || '#fff'}};width:calc(100% - 20rpx);" bindtap="reLocalAddress" data-compid="{{data.compId}}" data-address="{{data.location_address}}" data-latlng="{{data.addressInfo}}">{{data.location_address || '定位中...'}}<text class="ico-moon icon-fesdown"></text></view>
+<view class="takeout-shop-desc" wx:if="{{data.customFeature.showShopInfo}}">
+  <view class="" style="display:inline-block;width:70px;height:70px;margin:15px 13px 10px 15px;vertical-align:top;position:relative;overflow:hidden;" data-a="{{data.in_business_time}}">
+    <image src="{{data.shopInfo.cover}}"></image>
+    <view wx:if="{{data.in_business_time == 0}}" class="takeoutShopRest">商家休息</view>
+  </view>
+  <view class="shop-info">
+    <view class="shop-name">{{data.shopInfo.title}}</view>
+    <view class="shop-send" style="margin-bottom: 9px;">{{data.shopInfo.deliver_time}}分钟送达<text style="margin: 0 10px;color:#9b9b9b;">|</text>{{data.shopInfo.deliver_type == 0 ? '商家配送': '第三方配送'}}</view>
+    <view class="shop-send">起送价：{{data.shopInfo.min_deliver_price}}元<text style="margin: 0 10px;color:#9b9b9b;">|</text>配送费：{{data.shopInfo.deliver_fee}}元</view>
+  </view>
+  <view style="height: 21px;overflow: hidden;">
+    <view animation="{{data.takeoutAmination}}" id="takeoutAnimation">
+      <block wx:for="{{data.shopInfo.coupon_list}}" wx:key="">
+        <view class="info-context" style="height: 21px;">
+          <label class="ico-moon {{item.type==0? 'icon-tokeout-reduce takeoutReduceBackground':(item.type ==1 ? 'icon-tokeout-discount takeoutDiscountBackground' : ( item.type == 2 ? 'icon-takeout-replace takeoutReplaceBackground' : '')) }}"></label>
+          <text>{{item.title}}</text>
+        </view>
+      </block>
+      <text wx:if="{{ !data.shopInfo.coupon_list.length }}">暂无商家活动</text>
+    </view>
+  </view>
+</view>
+<view class="cutoffLine"></view>
+<view class="waimai-goods-evaluate"><view><view
+  data-index="1" 
+  data-compid="{{ data.compId }}" 
+  catchtap="changeEvaluate" 
+  class="{{data.selected == 1 ? 'selected': ''}}">商品</view></view><view><view class="{{data.selected == 2 ? 'selected': ''}}" data-index="2" data-compid="{{ data.compId }}" catchtap="changeEvaluate">评价</view></view><view><view class="{{data.selected == 3 ? 'selected': ''}}" data-index="3" data-compid="{{ data.compId }}" catchtap="changeEvaluate">店铺</view></view></view>
+<view class="element waimai waimai-container-wrap" style="{{ data.style }} {{data.selected == 1 ? 'display:block': 'display:none'}};height:calc({{data.heightPx}}px - 176rpx);" bindanimationend="animationEnd" data-compid="{{ data.compId }}">
+      <scroll-view class="typeList" scroll-y="true" style="width:{{ data.customFeature.leftSpanWidth }};height:calc({{data.heightPx}}px - 176rpx);margin-bottom:42px;">
+    <block wx:for="{{ data.content }}" wx:key="">
+      <view class="waimaiCategory" style="{{ data.customFeature.leftSpan }} background-color:{{data.customFeature.selected == index ? data.customFeature.selectedBackgroundColor : '' }}; color:{{data.customFeature.selected == index ? data.customFeature.selectedColor : '' }};{{data.customFeature.selected == index ? 'border-left:4px solid #ff7100': ''}};" 
+        data-index="{{ index }}" 
+        data-id="{{item.source}}" 
+        data-compid="{{ data.compId }}" 
+        data-param="{{data.pagination['category'+item.source].param}}" 
+        catchtap="clickCategory">
+        <text class="waimai-cate-text">{{ item.text }}</text>
+      </view>
+    </block>
+  </scroll-view>
+      <view style="left:{{ data.customFeature.leftSpanWidth }};width:calc(100% - {{ data.customFeature.leftSpanWidth }});display:inline-block;vertical-align:top;height:calc({{data.heightPx}}px - 176rpx);">
+    <block wx:for="{{ data.content }}" wx:key="text" wx:for-item="items">
+        <scroll-view 
+          hidden="{{index != data.customFeature.selected }}" 
+          class="waimaigoodslist" 
+            style="left:{{ data.customFeature.leftSpanWidth }};vertical-align:top;height:calc({{data.heightPx}}px - 176rpx);padding-bottom: 88rpx;"
+          scroll-into-view="{{data.scrollId}}" 
+          scroll-y="true"
+          data-compid="{{ data.compId }}"
+          data-curpage="{{data.curpage}}"
+          data-categoryid="{{items.source}}"
+          data-param="{{data.pagination['category'+items.source].param}}"
+          bindscrolltolower="takeoutStyleScrollFunc"
+          >
+          <view  class="takeoutCategory" data-source='{{items.source}}'>{{items.text}}</view>
+          <view wx:for="{{ data.show_goods_data['category'+items.source] }}" wx:key="id"  class="waimaigoods-list-item list-item">
+            <view data-id="{{ item.id }}" data-compid="{{ data.compId }}" >
+              <view class="inner-content" >
+                <image style="height:{{ data.customFeature.imgHeight }}; width:{{ data.customFeature.imgWidth }}"
+                class="waimai-img" src="{{ item.cover }}" bindtap="showGoodsDetail" data-id="{{ item.id }}" 
+                data-compid="{{ data.compId }}" data-index="{{ index }}" data-category="{{items.source}}"></image>
+                <view style="width: initial;" class="waimai-title">
+                  <view class="waimai-title-text">{{ item.title }}</view><view><text style="color: #999;font-size: 28rpx;">销量：{{item.sales}}</text></view><view class="waimai-item-bottom" style='padding-top: 0;'><text class="waimai-price-per">
+                        <text style="font-size:22rpx;font-weight: normal;">¥</text> {{ item.price }}</text>
+                      <label class="waimai-number-change"><label 
+                      wx:if="{{data.goods_data_list[item.id].totalNum > 0}}" 
+                      class="waimai-count-minus {{ data.waimaiDetail[index].count <= 0 ? 'disabledminusbtn':'' }}" 
+                      data-goodsid="{{ item.id }}" catchtap="goodsListMinus" 
+                      data-stock="{{data.goods_data_list[item.id].stock}}" data-compid="{{ data.compId }}" 
+                      data-model="{{item.goods_model}}"></label><input 
+                      wx:if="{{data.goods_data_list[item.id].totalNum  > 0}}" type="text" 
+                      class="waimai-number" disabled="disabled"
+                      value="{{ data.goods_data_list[item.id].totalNum }}"></input><label wx:if="{{!item.goods_model}}" 
+                      class="waimai-count-plus {{data.goods_data_list[item.id].totalNum >= data.goods_data_list[item.id].stock ? 'disabled' : ''}}" data-goodsid="{{ item.id }}" catchtap="goodsListPlus" 
+                      data-stock="{{data.goods_data_list[item.id].stock}}" data-compid="{{ data.compId }}" 
+                      data-model="{{item.goods_model}}" data-categoryid="{{data.showCategory.source}}"></label><label 
+                      wx:if="{{item.goods_model}}" class="waimai-count-model-plus" data-goodsid="{{ item.id }}" 
+                      catchtap="goodsListPlus" data-stock="{{data.goods_data_list[item.id].stock}}" 
+                      data-compid="{{ data.compId }}" data-model="{{item.goods_model}}" 
+                      data-categoryid="{{data.showCategory.source}}">选规格</label></label>
+                    </view>
+                </view>
+              </view>
+            </view>
+          </view>
+          <template wx:if="{{data.loading}}" is="requestLoading"></template>
+          <template wx:if="{{data.pagination['category'+items.source].is_more == 0 && data.show_goods_data['category'+items.source].length == 0}}" is="requestNone" data="{{data: '你还未添加任何数据~'}}"></template>
+          <template wx:if="{{data.loadingFail}}" is="requestFail" data="{{refreshEvent: 'takeoutStyleScrollFunc', compId: data.compId}}"></template>
+          <template wx:if="{{data.pagination['category'+items.source].is_more == 0 && data.show_goods_data['category'+items.source].length > 0}}" is="requestAll"></template>
+          <!-- <view class="dead-line" wx:if="{{data.pagination['category'+items.source].is_more == 0}}">已经到底啦</view> -->
+        </scroll-view>
+    </block>
+  </view>
+</view>
+<view class="goods-bottom-opt" style="height:94rpx; {{data.selected == 1 ? 'display:block;': 'display:none;'}}background:#474747;"  data-compid="{{ data.compId }}" catchtap="showShoppingCartPop">
+  <view class="shoppingcart-total-money">
+    <view class="shopping-cart-wrap" style="background-color: {{ data.TotalNum == 0 ? 'rgb(83,82,87);': '' }}">
+      <label class="ico-moon icon-shoppingcart" style='color: {{data.TotalNum == 0 ? "#777777" : "#fff"}}' 
+      data-compid="{{ data.compId }}" catchtap="showShoppingCartPop"></label><label class="waimai-count"
+      wx:if="{{ data.TotalNum != 0}}">{{ data.TotalNum }}</label>
+    </view>
+    <view class="shopping-money-wrap">
+      <block wx:if="{{ data.TotalPrice != 0 }}">
+        <view class="shopping-money-price" style="font-size:36rpx;font-weight: 500;{{data.shopInfo.deliver_fee == 0? 'line-height: 88rpx;': 'line-height:44rpx;'}}"><text style="margin-right: 3px;">¥</text>{{ data.TotalPrice }}</view>
+        <view class="classname" wx:if="{{data.shopInfo.deliver_fee}}">配送费 {{data.shopInfo.deliver_fee}} 元</view>
+      </block>
+      <block wx:else>
+        <view class="classname" style="color:#9b9b9d;line-height: 88rpx;">请选择商品</view>
+      </block>
+    </view>
+  </view>
+      <view class="sure-waimai-order {{ data.TotalPrice < data.shopInfo.min_deliver_price ? 'disabledBtn':'' }}" 
+      style="{{data.TotalPrice >= data.shopInfo.min_deliver_price && data.TotalPrice> 0 ?  'background-color:rgb(255, 88, 0);'  : 'background-color:rgb(83,82,87);'}}" catchtap="clickChooseComplete" data-compid="{{ data.compId }}">{{ data.TotalPrice < data.shopInfo.min_deliver_price  ? '还差'+price.price(data.shopInfo.min_deliver_price, data.TotalPrice) +'元起送':'去结算' }}</view>
+</view>
+<view class="tokeout-shop-evaluate" style=" {{data.selected == 2 ? 'display:block': 'display:none'}}">
+  <scroll-view style="height: calc({{data.heightPx}}px + 88rpx);" scroll-y="true">
+    <view class="takeout-evaluate" style="border-bottom:1px solid #f3f3f3;margin:0 30rpx;">
+          <view class="comprehensive-score">{{data.assessScore}}<view style="font-size:22rpx;color:#333;font-weight:normal;">综合评分</view>
+          </view>
+      <view style="width:2rpx;height:120rpx;vertical-align:middle;display:inline-block;background:#f3f3f3;"></view>
+      <view class="other-score">
+        <view style="font-size:24rpx;color:#666;margin-bottom: 20rpx;">服务态度
+          <text class="ico-moon icon-fullstar" style="{{data.serviceScore >= 1 ? 'color:#fc9e20;' : 'color:#dcdcdc;'}}margin-left:30rpx;"></text>
+          <text class="ico-moon icon-fullstar" style="{{data.serviceScore >= 2 ? 'color:#fc9e20;' : 'color:#dcdcdc;'}}"></text>
+          <text class="ico-moon icon-fullstar" style="{{data.serviceScore >= 3 ? 'color:#fc9e20;' : 'color:#dcdcdc;'}}"></text>
+          <text class="ico-moon icon-fullstar" style="{{data.serviceScore >= 4 ? 'color:#fc9e20;' : 'color:#dcdcdc;'}}"></text>
+          <text class="ico-moon icon-fullstar" style="{{data.serviceScore >= 5 ? 'color:#fc9e20;' : 'color:#dcdcdc;'}}"></text>
+        </view>
+        <view style="font-size:24rpx;color:#666;">商品评分
+          <text class="ico-moon icon-fullstar" style="margin-left:30rpx;{{data.goodsScore >= 1 ? 'color:#fc9e20;' : 'color:#dcdcdc;'}}"></text>
+          <text class="ico-moon icon-fullstar" style="{{data.goodsScore >= 2? 'color:#fc9e20;' : 'color:#dcdcdc;'}}"></text>
+          <text class="ico-moon icon-fullstar" style="{{data.goodsScore >= 3? 'color:#fc9e20;' : 'color:#dcdcdc;'}}"></text>
+          <text class="ico-moon icon-fullstar" style="{{data.goodsScore >= 4? 'color:#fc9e20;' : 'color:#dcdcdc;'}}"></text>
+          <text class="ico-moon icon-fullstar" style="{{data.goodsScore >= 5? 'color:#fc9e20;' : 'color:#dcdcdc;'}}"></text>
+        </view>
+      </view>
+    </view>
+    <view style="padding: 15px;"><view class="takeout-assess-btn {{data.assessActive == 0? 'active' :''}}" 
+    data-active="0" data-compid="{{ data.compId }}" catchtap="changeAssessType">有图({{data.assessNum[4]||0}})</view><view class="takeout-assess-btn {{data.assessActive == 1? 'active' :''}}" 
+    data-active="1" data-compid="{{ data.compId }}" catchtap="changeAssessType">好评({{data.assessNum[1]||0}})</view><view class="takeout-assess-btn {{data.assessActive == 2? 'active' :''}}" 
+    data-active="2" data-compid="{{ data.compId }}" catchtap="changeAssessType">中评({{data.assessNum[2]||0}})</view><view class="takeout-assess-btn {{data.assessActive == 3? 'active' :''}}" 
+    data-active="3" data-compid="{{ data.compId }}" catchtap="changeAssessType">差评({{data.assessNum[3]||0}})</view></view>
+    <block wx:for="{{data.showAssess}}" wx:for-index="i" wx:for-item="item" wx:key="">
+      <view class="takeoutAssessList">
+        <image src="{{item.buyer_headimgurl}}"></image>
+        <view class="assessInfoTop">
+          <view class="takeoutNickname">
+            <text class="tackoutNickText">{{item.buyer_nickname}}</text>
+            <text class=" pull-right">{{item.add_time}}</text>
+          </view>
+          <view class="takeoutService">商家服务：
+            <label class="ico-moon icon-satisfied {{item.assess_info.level == 1 ? 'active' :''}}"></label>
+            <text class="{{item.assess_info.level == 1 ? 'active' :''}}"> 满意</text>
+            <text style="color: #9b9b9b;margin: 0 9rpx">|</text>
+            <label class="ico-moon icon-commonly {{item.assess_info.level == 2 ? 'active' :''}}"></label>
+            <text class="{{item.assess_info.level == 2 ? 'active' :''}}"> 一般</text>
+            <text style="color: #9b9b9b;margin: 0 9rpx">|</text>
+            <label class="ico-moon icon-dissatisfied {{item.assess_info.level == 3 ? 'active' :''}}"></label>
+            <text class="{{item.assess_info.level == 3 ? 'active' :''}}"> 不满意</text>
+          </view>
+        </view>
+        <view class="takeout-assess-title">
+          <text class="takeout-assess-goodsTitle">{{item.goods_info.title}}：</text>
+          <text class="takeout-assess-goodsContent">{{item.assess_info.content}}</text>
+        </view>
+        <block wx:if="{{item.assess_info.has_img}}">
+          <view style="margin-left:74rpx;">
+            <image wx:for="{{item.assess_info.img_arr}}" wx:key="" wx:for-item="imgs"  data-preview-imgarr="{{item.assess_info.img_arr}}" data-src="{{imgs}}" src="{{imgs}}" catchtap="previewImage"></image>
+          </view>
+        </block>
+      </view>
+    </block>
+    <view wx:if="{{data.moreAssess}}" class="getMoreAssess " bindtap="getMoreAssess" data-compid="{{ data.compId }}" 
+    data-nextpage="{{data.assessCurrentPage + 1}}">查看更多
+      <label  class="ico-moon icon-downarrow"></label>
+    </view>
+    <view wx:if="{{!data.moreAssess }}" class="getMoreAssess">{{data.assessList.length ? '已经到底啦' : '暂无评价'}}</view>
+  </scroll-view>
+</view>
+    <view class="tokeout-shop-info" style="{{data.selected == 3 ? 'display:block': 'display:none'}};min-height:calc({{data.heightPx}}px - 82rpx - 20px)">
+      <view>
+        <view class="info-title">商家信息</view><view class="info-context"><label class="ico-moon icon-tokeout-info"></label>
+          <text>{{data.shopInfo.description}}</text>
+        </view>
+        <view class="info-context">
+          <label class="ico-moon icon-sales-num"></label><text>总销量：{{data.shopInfo.total_sales}}</text>
+        </view>
+        <view class="info-context"><label class="ico-moon icon-business-time" style="font-size: 24rpx;"></label><text>营业时间：{{data.shopInfo.business_time_str}}</text></view>
+        <view class="info-context" catchtap="callTakeout" data-phone="{{data.shopInfo.phone}}"><label class="ico-moon icon-tokeout-phone"></label><text>{{data.shopInfo.phone}}</text></view>
+        <view class="info-context" catchtap="openTakeoutLocation" data-name="{{data.shopInfo.title}}" data-address="{{data.shopInfo.address}}" data-lat="{{data.shopInfo.latitude}}" data-lng="{{data.shopInfo.longitude}}"><label class="ico-moon icon-fesadress"></label><text>{{data.shopInfo.address}} 配送范围{{data.shopInfo.deliver_distance}}m</text></view>
+        <view class="info-context"><label class="ico-moon icon-distribution"></label><text>{{data.shopInfo.deliver_type == 0 ? '商家配送': '第三方配送'}}</text></view>
+      </view>
+      <view>
+        <view class="info-title">商家优惠和服务</view>
+        <block wx:for="{{data.shopInfo.coupon_list}}" wx:key="">
+          <view class="info-context" bindtap="tapGetCouponHandler" data-event-params='{"coupon_id":"{{item.id}}"}'>
+            <label class="ico-moon {{item.type==0? 'icon-tokeout-reduce takeoutReduceBackground':(item.type ==1 ? 'icon-tokeout-discount takeoutDiscountBackground' : ( item.type == 2 ? 'icon-takeout-replace takeoutReplaceBackground' : '')) }}"></label>
+            <text>{{item.title}}</text>
+          </view>
+        </block>
+        <text class="info-context" wx:if="{{data.shopInfo.coupon_list.length == 0}}" style="color: #999;width:auto;vertical-align:top;">(暂无活动)</text>
+      </view>
+</view>
+<view class="takeout-goods-picture" style="{{!data.goodsDetailShow ? 'display:none;': 'display:block;'}}"
+data-compid="{{ data.compId }}" bindtap="hideDetailPop">
+  <view class="">
+    <image style="width:650rpx;height:650rpx;" src="{{data.goodsDetail.cover}}"></image>
+    <view class="takeout-pop-title">{{data.goodsDetail.title}}</view>
+    <view class="takeout-pop-desc">{{data.goodsDetail.description}}</view>
+    <view class="takeout-pop-price">¥{{data.goodsDetail.price}}</view>
+  </view>
+</view>
+<view class="takeout-model-choose"  style="{{!data.goodsModelShow ? 'display:none;': 'display:block;'}}"
+data-compid="{{ data.compId }}" bindtap="hideModelPop">
+  <view catchtap="stopPropagation">
+    <view class="takeout-title">{{data.goods_model_list[data.modelGoodsId].name}}</view>
+    <scroll-view style="padding-left:20px; height:242px;width:610rpx" scroll-y="true">
+      <block wx:for="{{data.goods_model_list[data.modelGoodsId].modelData}}" wx:for-item="goodsItems" wx:key="">
+            <view class="" style="padding-top: 15px;padding-bottom: 10px;color:#666;font-size: 13px;">{{goodsItems.name}}：</view>
+            <view class="model-btn">
+              <text wx:for="{{goodsItems.subModelName}}" wx:key="" wx:for-index="i"
+              class="{{goodsItems.subModelId[i] == data.modelIdArr[index] ? 'active' :'' }}" 
+              data-id="{{goodsItems.subModelId[i]}}" data-goodsid="{{data.modelGoodsId}}" data-index="{{i}}" 
+              data-parentindex="{{index}}" data-modelname="{{item}}" data-compid="{{ data.compId }}" 
+              catchtap="chooseModel">{{item}}</text>
+            </view>
+      </block>
+    </scroll-view>
+    <view class="takeoutGoodsModelBtn">
+      <text style="padding-left:20px;">
+        <text style="font-size: 24rpx;font-weight: normal;margin-right:5px;">¥</text>{{data.modelPrice}}
+      </text>
+      <view data-modelprice="{{data.modelPrice}}" data-goodsid="{{data.clickGoodsId}}" data-compid="{{ data.compId }}" 
+      catchtap="sureChooseModel">选好了</view>
+    </view>
+  </view>
+</view>
+<view class="takeout-shopping-carts-list" style="{{!data.shoppingCartShow ? 'display:none;': 'display:block;'}}" 
+data-compid="{{ data.compId }}" bindtap="hideShoppingCart">
+  <view catchtap="stopPropagation" style="max-height: calc({{data.customFeature.showShopInfo ? (data.heightPx + 181) / 2 : (data.heightPx + 86) / 2}}px + 76rpx);height: auto;padding-bottom:30rpx;">
+    <view class="chosen-title">已选商品<view wx:if="{{data.TotalNum}}" 
+    class="pull-right ico-moon icon-delete" catchtap="deleteAllCarts" data-compid="{{ data.compId }}" 
+    style="display:inline-block;font-size: 26rpx;font-weight:400;color: #333;margin-right: 30rpx;">清空</view></view>
+        <scroll-view style="max-height: calc({{data.customFeature.showShopInfo ? (data.heightPx + 181) / 2 - 37 : (data.heightPx + 86) / 2 - 37}}px + 50rpx);" scroll-y="true">
+      <block wx:for="{{data.cartGoodsIdList}}" wx:for-index="index" wx:for-item="items" wx:key="">
+        <block wx:for="{{data.cartList[items]}}" wx:key="list" wx:for-index="i">
+          <block wx:if="{{item.modelId != 0}}">
+            <view wx:if="{{item.num}}" class="shopping-cart-list" data-id="{{i}}" style="margin:0 30rpx;" wx:key="">
+              <view class="cart-info">
+                <view class="cart-title" style="margin-top: 13px;">{{item.gooodsName}}</view>
+                <view class="cart-model">{{item.modelName}}</view>
+              </view><view class="cart-price">¥{{item.totalPrice}}</view><view class="cart-btn">
+                <label class="takeout-count-minus" catchtap="cartListMinus" data-modelid="{{item.modelId}}" 
+                data-compid="{{ data.compId }}" data-goodsid="{{item.id}}" data-stock="{{item.stock}}" data-num="{{ item.num }}" data-price="{{item.price}}"></label><input type="text" style="width:30px;display:inline-block;" disabled="disabled" value="{{ item.num }}"></input><label class="takeout-count-plus {{item.num >= item.stock ? 'disabled': ''}}" catchtap="cartListPlus" data-modelid="{{item.modelId}}" data-compid="{{ data.compId }}" data-goodsid="{{item.id}}" data-stock="{{item.stock}}" data-num="{{item.num}}"></label>
+              </view>
+            </view>
+          </block>
+          <block wx:else>
+            <view wx:if="{{item.num}}" class="shopping-cart-list" style="margin:0 30rpx;">
+              <view class="cart-info" >
+                <view class="cart-title" style="line-height:60px;">{{item.gooodsName}}</view>
+              </view><view class="cart-price">¥{{item.totalPrice}}</view><view class="cart-btn">
+                <label class="takeout-count-minus" catchtap="cartListMinus" data-modelid="0" data-compid="{{ data.compId }}" 
+                data-goodsid="{{item.id}}" data-stock="{{item.stock}}" data-price="{{item.price}}" 
+                data-num="{{ item.num}}"></label><input disabled="disabled" type="text" style="width:30px;display:inline-block;"
+                value="{{ item.num }}"></input><label class="takeout-count-plus {{item.num >= item.stock ? 'disabled': '' }}"
+                catchtap="cartListPlus" data-modelid="0" data-compid="{{ data.compId }}"
+                data-goodsid="{{item.id}}" data-stock="{{item.stock}}" data-num="{{ item.num }}"></label>
+              </view>
+            </view> 
+          </block>
+        </block>
+      </block>
+    </scroll-view>
+  </view>
+</view>
+</template>
+<view class="ele-container" wx:if="{{!waimai1.hidden}}">
+  <template is="zcWaiMai" data="{{data:waimai1,top_nav:top_nav}}"></template>
+</view>
+
+<view style="width:100%;height:130rpx;overflow:hidden;margin-top:10px;">
+  <image style="width:100%;height:100%;" src="http://cdn.jisuapp.cn/zhichi_frontend/static/webapp/images/tec-support-new.png" mode="aspectFill"></image>
+</view>
+<view id="tostorePayDialog" class="page-dialog-wrap page-addshoppingcart-dialog" hidden="{{ !addTostoreShoppingCartShow }}" bindtap="hideAddShoppingcart">
+  <view class="page-bottom-dialog" catchtap="stopPropagation">
+    <view class="page-bottom-content">
+      <view class="pay-close-dialog page-dialog-close" bindtap="hideAddShoppingcart">×</view>
+      <view class="dialog-block-item">
+        <view class="pay-goods-baseinfo">
+          <view class="pay-goods-title ellipsis">{{ goodsInfo.title }}</view>
+        </view>
+      </view>
+      <view class="dialog-block-item" hidden="{{ !goodsInfo.model_items.length }}" style="margin-bottom: 0;">
+        <view class="pay-goods-models" scroll-y="true">
+          <view wx:for="{{ goodsInfo.model }}" wx:key="" wx:for-item="model" wx:for-index="modelIndex">
+            <text style="vertical-align:top;float: left;margin-top: 5px;width:120rpx;display:inline-block;text-align:right;font-size:24rpx;">{{ model.name }}：</text>
+            <label class="pills-list" style="text-align:center;max-width:528rpx;">
+              <label wx:for="{{ model.subModelName }}"
+                     wx:for-item="name"
+                     wx:key=""
+                     data-model-index="{{ modelIndex }}"
+                     data-submodel-index="{{ index }}"
+                     class="subModel {{ selectGoodsModelInfo.models[modelIndex] == model.subModelId[index] ? 'select' : '' }}"
+                     data-submodel-id="{{ model.subModelId[index] }}" bindtap="selectGoodsSubModel">{{ name }}</label>
+            </label>
+          </view>
+        </view>
+      </view>
+      <view class="dialog-block-item">
+          <view class="pay-goods-price clearfix">
+            <view class="pay-current-price pull-left" style="font-size: 16px;">¥ {{ selectGoodsModelInfo.price }}</view>
+          <view class="pull-right">
+            <label wx:if="{{ goodsInfo.goods_type != 3 }}">库存 <text class="pay-goods-stock">{{ selectGoodsModelInfo.stock }}</text></label>
+            <view class="quantity">
+              <label class="minus {{ selectGoodsModelInfo.buyTostoreCount <= 0 ? 'disabled' : '' }}"></label>
+              <text class="pay-buy-count" class="txt" style="margin:auto 10px;">{{ selectGoodsModelInfo.buyTostoreCount }}</text>
+              <label class="plus {{ selectGoodsModelInfo.buyTostoreCount >= selectGoodsModelInfo.stock ? 'disabled' : '' }}"></label>
+              <view class="response-area response-area-minus" bindtap="clickTostoreMinusButton"></view>
+              <view class="response-area response-area-plus" bindtap="clickTostorePlusButton"></view>
+            </view>
+          </view>
+        </view>
+        <view style="font-size:12px;margin-top:10px;color:#c9c9c9;text-align: center;">{{businesssTimeString}}</view>
+      </view>
+      <view class="toStore-bottom-nav">
+    <view class="bottom-nav-detail" catchtap="goToShoppingCart"><label class="icon-shoppingcart ico-moon"><label wx:if="{{ cartGoodsNum != 0 }}" class="toStore-cart-tip">{{ cartGoodsNum }}</label></label><text>¥ {{ cartGoodsTotalPrice }}</text></view>
+    <view class="bottom-nav-ready {{ cartGoodsNum == 0 ? 'disabled': '' }} {{tostoreTypeFlag ? '' :'disabled'}}" bindtap="getValidateTostore">选好了</view>
+  </view>
+    </view>
+  </view>
+</view>
+
+</view>

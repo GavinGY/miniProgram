@@ -1,0 +1,24 @@
+<component-getUserInfo showGetUserInfo="{{showGetUserInfo}}"></component-getUserInfo>
+<view>
+  <view class="table-header">
+    <view>佣金来源</view>
+    <view>佣金金额</view>
+    <view>时间</view>
+    <view>状态</view>
+  </view>
+  <view class="table-section">
+    <view class="table-row" wx:for="{{ commissionArray }}" wx:key="">
+      <view class="table-cell">{{item.nickname}}</view>
+      <view class="table-cell">{{ item.distributor_commission }}</view>
+      <view class="creat-time">{{ item.create_time }}</view>
+      <view class="table-cell {{item.status == '已生效' ? 'orange' : ''}}" >{{ item.status }}</view>
+    </view>
+  </view>
+  <view class="navigator-footer" wx:if="{{ totalPage > 1 }}">
+    <view class="navitaor-btn" bindtap="prevPage">上一页</view>
+    <text>{{ currentPage || 1 }}/{{ totalPage || 1 }}</text>
+    <view class="navitaor-btn" bindtap="nextPage">下一页</view>
+  </view>
+</view>
+
+

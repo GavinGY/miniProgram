@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "拼团中心",
+  "usingComponents":{
+    "component-getUserInfo": "/components/getUserInfo/getUserInfo"
+  }
+}

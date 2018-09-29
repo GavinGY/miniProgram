@@ -1,0 +1,53 @@
+<component-getUserInfo showGetUserInfo="{{showGetUserInfo}}"></component-getUserInfo>
+<view class="top-section">
+  <view>可提现佣金 (元)</view>
+  <view style="margin:76rpx auto 92rpx; font-size: 96rpx;">{{ widthdrawData.can_withdraw_commission || 0.000 }}</view>
+  <view class="commission-detail">
+    <view class="commission-detail-item">
+      <view>{{ widthdrawData.total_commission || 0.000 }}</view>
+      <view>累计佣金</view>
+    </view>
+    <view class="commission-detail-item">
+      <view>{{ widthdrawData.withdrew_commission || 0.000 }}</view>
+      <view>已提现佣金</view>
+    </view>
+    <view class="commission-detail-item">
+      <view>{{ nowCommission || 0.000 }}</view>
+      <view>现有佣金</view>
+    </view>
+    <view class="commission-detail-item">
+      <view>{{  ToHitCommission || 0.000 }}</view>
+      <view>待打款佣金</view>
+    </view>
+  </view>
+</view>
+<view class="middle-section">
+  <view class="withdraw-input-container">
+    <text>提现金额 (元)</text><input placeholder="请输入提现金额" bindinput="inputWithdrawCount" value="{{withdrawCount}}" />
+  </view>
+  <view>
+    <view class="middle-section-item">每次可提现佣金不低于 <text>{{ promotionInfo.withdraw_requirement || 0.000 }}</text> 元</view>
+    <view class="middle-section-item">每个月最多可提现 <text>{{ promotionInfo.withdraw_times_limit }}</text> 次</view>
+    <view class="middle-section-item">买家确认收货之后，佣金方可提现</view>
+  </view>
+</view>
+<view class="bottom-section">
+  <view class="withdraw-btn" bindtap="withdraw">我要提现</view>
+</view>
+<view class="page-dialog-wrap" hidden="{{ hideSuccessDialog }}" catchtap="hideSuccessDialog">
+  <view class="success-dialog">
+    <view class="success-dialog-content" catchtap="stopPropagation">
+      <text class="dialog-close icon-close-btn ico-moon" catchtap="hideSuccessDialog"></text>
+      <view><image src="http://cdn.jisuapp.cn/static/webapp/images/promotion-wallet.png"></image></view>
+      <button catchtap="withdrawToWechat" wx:if="{{transfer_type_value != 'offline'}}">提现到微信零钱</button>
+      <button catchtap="withdrawToOther" style="background: #fff;color: #ff7100;" wx:if="{{transfer_type_value != 'wechat'}}">线下提现</button>
+    </view>
+  </view>
+</view>
+  <view class="page-dialog-wrap" hidden="{{hideWithdrawSuccess}}" catchtap="hideWithdrawSuccess">
+    <view class="withdrawSuccess">
+      <view class="ico-moon icon-success-tip">成功申请提现了</view>
+      <view>请耐心等待微信零钱到账</view>
+      <view class="close-withdraw-btn" catchtap="hideWithdrawSuccess">知道了</view>
+    </view>
+  </view>

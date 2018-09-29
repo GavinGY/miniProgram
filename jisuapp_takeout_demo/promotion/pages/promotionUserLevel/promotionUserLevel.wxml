@@ -1,0 +1,10 @@
+<view class="top-section">推广人员等级规则介绍</view>
+<view>
+  <view wx:for="{{ userLevels }}" class="middle-section-item" wx:key="">
+    <view class="title">等级称号: {{ item.level_name }}</view>
+    <view class="detail">累计佣金达到<text>{{ item.commission_from }}</text>元至<text>{{ item.commission_to }}</text>元，额外增加商品佣金<text>{{ item.extra_percent }}倍</text></view>
+  </view>
+</view>
+<view class="bottom-section">注: 累计佣金超过{{ countThreshold }}元，统一归为最高等级</view>
+
+

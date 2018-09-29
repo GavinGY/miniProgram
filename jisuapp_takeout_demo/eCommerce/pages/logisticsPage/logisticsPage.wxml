@@ -1,0 +1,16 @@
+<component-getUserInfo showGetUserInfo="{{showGetUserInfo}}"></component-getUserInfo>
+<view id="logisticsPage">
+  <view class="logistics-header">
+    <view class="logistics-company">承运公司：<text>{{ info.express_name }}</text></view>
+    <view>运单编号：<text>{{ info.LogisticCode }}</text></view>
+  </view>
+  <view class="logistics-container">
+    <view class="logistics-list">
+      <view wx:for="{{ logistics }}" wx:key="" class="logistics-item">
+        <view class="logistics-location">{{ item.AcceptStation }}</view>
+        <view class="logistics-time">{{ item.AcceptTime }}</view>
+      </view>
+    </view>
+  </view>
+</view>
+

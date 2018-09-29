@@ -1,0 +1,63 @@
+<component-getUserInfo showGetUserInfo="{{showGetUserInfo}}"></component-getUserInfo>
+  <view class="withdraw-by-other-dialog">
+    <view class="withdraw-by-other-title">提现金额：
+      <text style="color: #ff7100;">{{withdrawCount}}元</text>
+    </view>
+    <view class="widthdraw-form">
+      <label for="">收款人</label>
+      <input type="text" placeholder="真实姓名" value="{{distributor_withdraw_arr.real_name}}" bindinput="realname"
+      />
+    </view>
+    <view class="widthdraw-form">
+      <label for="">收款方式</label>
+      <picker value="{{index}}" range="{{acceptTypeArray}}" bindchange="changeAcceptType">
+        <view>{{acceptTypeArray[index]}}
+          <text style="float: right;margin-right: 20rpx;font-size:20rpx;" class="ico-moon icon-fesdown"></text>
+        </view>
+      </picker>
+    </view>
+    <block wx:if="{{index == 0}}">
+      <view class="widthdraw-form">
+        <label for="">支付宝昵称</label>
+        <input type="text" value="{{distributor_withdraw_arr.nickname}}" bindinput="nickname" />
+      </view>
+      <view class="widthdraw-form">
+        <label for="">支付宝账号</label>
+        <input type="text" value="{{distributor_withdraw_arr.account}}" bindinput="account" />
+      </view>
+    </block>
+    <block wx:else>
+      <view class="widthdraw-form">
+        <label for="">收款银行</label>
+        <input type="text" placeholder="开户行（支行）" value="{{distributor_withdraw_arr.bank_name}}" bindinput="bank"
+        />
+      </view>
+      <view class="bank-tip">开户行精确到支行</view>
+      <view class="widthdraw-form">
+        <label for="">银行卡号</label>
+        <input type="text" placeholder="收款人卡号" value="{{distributor_withdraw_arr.account}}" bindinput="account"
+        />
+      </view>
+    </block>
+    <view class="widthdraw-form">
+      <label for="">备注</label>
+      <textarea type="text" value="{{distributor_withdraw_arr.description}}" bindinput="desc"></textarea>
+    </view>
+    <block wx:if="{{index == 1}}">
+      <view class="payattention">
+        <view>注：</view>
+        <view>1.异地跨行转账需要承担相应的手续费用。</view>
+        <view>2.银行转款到账时间已实际到账为准。</view>
+        <view style='color:red;width:610rpx;margin:0 auto;'>请认真核对信息，一旦提交无法修改</view>
+      </view>
+    </block>
+    <view wx:if="{{index != 1}}" style='color:red;width:610rpx;margin:0 auto;'>注：请认真核对信息，一旦提交无法修改。</view>
+    <button catchtap="wantWithdraw">我要提现</button>
+  </view>
+  <view class="page-dialog-wrap" hidden="{{hideWithdrawSuccess}}" catchtap="hideWithdrawSuccess">
+    <view class="withdrawSuccess">
+      <view class="ico-moon icon-success-tip">成功申请提现了</view>
+      <view>请耐心等待商家打款！</view>
+      <view class="close-withdraw-btn" catchtap="hideWithdrawSuccess">知道了</view>
+    </view>
+  </view>

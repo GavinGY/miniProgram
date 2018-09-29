@@ -1,0 +1,67 @@
+<component-getUserInfo showGetUserInfo="{{showGetUserInfo}}"></component-getUserInfo>
+<view class="preview-goods-order-wrap" id="preview-goods-order">
+  <view class="preview-goods-order-section preview-address" hidden="{{ is_self_delivery == 1 }}">
+    <block wx:if="{{ selectAddress.id && selectAddress.is_distance != 0}}">
+      <view style="position:relative;margin-left:56rpx;" bindtap="goToMyAddress" data-address-id="{{ selectAddress.id }}">
+        <view class="ico-moon icon-fesadress"></view>
+        <view style="margin-bottom:7px;">{{ selectAddress.address_info.name }} {{ selectAddress.address_info.contact }}</view>
+        <view>{{ selectAddress.address_info.province.text + selectAddress.address_info.city.text + selectAddress.address_info.district.text + selectAddress.address_info.detailAddress }}</view>
+        <view class="preview-address-options">
+          <text style="margin-right:15px;font-size: 24rpx;">更换</text>
+          <!-- <text bindtap="showAddAddress" style="font-size: 24rpx;">添加地址</text>-->
+        </view>
+      </view>
+    </block>
+    <block wx:else>
+      <view class="pull-right ico-moon icon-rightarrow"></view>
+      <view bindtap="goToMyAddress">添加地址</view>
+    </block>
+  </view>
+  <wxs module="price">
+    var price = function(a, b){
+      var c = (a * b).toFixed(2);
+      return c
+    }
+    module.exports.price = price;
+  </wxs>
+  <view class="preview-goods-order-list preview-goods-order-section">
+    <block wx:for="{{ goodsList }}" wx:for-item="goods" wx:for-index="goodsIndex" wx:key="">
+      <view class="preview-goods-order-item">
+        <view class="preview-goods-title">{{ goods.title }}<view class="preview-goods-model">{{ goods.model_value_str }}</view></view><text style="color: #333;" class="buy-goods-count"><text class=" ico-moon icon-closes" ></text><text style="font-size: 26rpx;font-weight: 600;">{{ goods.num }}</text></text><view class="preview-goods-price"><text style="font-size: 20rpx;margin-right: 3px;">¥</text>{{ price.price(goods.price,goods.num) }}</view>
+      </view>
+    </block>
+    <view class="preview-goods-order-section" style="margin:0 0 1px;padding:26rpx 0;font-size:28rpx;font-size: 26rpx;">配送费 <text class="pull-right"><text style="font-size: 20rpx;margin-right: 3px;">¥</text>{{ express_fee }}</text></view>
+  </view>
+  <view class="preview-goods-order-section" wx:if="{{ discountList.length }}">
+    <view class="preview-section-title" style="font-size:28rpx;">优惠方式: </view>
+    <picker bindchange="discountChange" value="{{ selectDiscountIndex }}" range="{{ discountList }}" range-key="title" style="margin-bottom:-12rpx;">
+      <view class="select-discount-title">{{ selectDiscountInfo.name }}<text class="pull-right" style="font-size:24rpx;color:#ff7100;" hidden="{{ selectDiscountIndex == 0 }}">-<text style="font-size: 20rpx;margin: 0 3px;">¥</text>{{ discount_cut_price }}</text></view>
+    </picker>
+  </view>
+  
+  <view class="preview-goods-order-section" wx:if="{{ balance != 0 }}">
+    <view class="use-balance-option"><text>使用储值金</text> <switch class="pull-right" checked="true" bindchange="useBalanceChange"/></view>
+    <view hidden="{{ !useBalance }}" class="select-discount-title" style="margin-top:9px;margin-bottom:-12rpx;">储值金抵现 <text class="pull-right" style="color:#ff7100;">- ¥ {{ deduction }}</text></view>
+  </view>
+  <view class="preview-goods-order-section" bindtap="goToAdditionalInfo" wx:if="{{ !noAdditionalInfo }}">
+    补充信息 <view class="ico-moon icon-rightarrow pull-right" style="color:#aaa;"></view>
+  </view>
+  <view class="preview-goods-order-section">
+    <textarea bindinput="remarkInput" maxlength="30" placeholder="买家留言"></textarea>
+    <view style="text-align:right;border-radius:0 0 4px 4px;background-color:#eee;">{{orderRemark.length || 0}}/30</view>
+  </view>
+  <view class="preview-goods-order-section" hidden="{{ is_self_delivery == 0 }}">
+    <view bindtap="openStoreLocation">
+      <label class="ico-moon icon-location"></label>{{shopAddress.region_string + shopAddress.shop_location}}
+    </view>
+    <view style="margin:12px 0;" bindtap="makeStorePhoneCall"><label class="ico-moon icon-phone"></label>{{shopAddress.shop_contact}}</view>
+  </view>
+  <view class="preview-goods-order-section total-price" style="margin-bottom:1px;text-align:right;color:#333;font-size:26rpx"><view style="margin-bottom: 32rpx;font-size:28rpx;"><text class="pull-left">优惠金额</text> ¥ {{ discount_cut_price || 0 }}</view><view style="font-size:28rpx;"><text class="pull-left">待支付</text> <text style="font-size: 32rpx;font-weight: 500;">¥ {{totalPayment}}</text></view></view>
+  
+  <view class="bottom-nav">
+    <view class="preview-goods-total-price">合计: <text class="price-count" style="font-weight: 500;font-size: 34rpx;"><text style="margin-right: 3px;">¥</text>{{ totalPayment }}</text></view>
+    <form report-submit="true" bindsubmit="confirmPayment">
+      <button formType="submit" disabled='{{ disablePay ? false : true }}'>提交订单</button>
+    </form>
+  </view>
+</view>

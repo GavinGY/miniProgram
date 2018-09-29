@@ -1,0 +1,497 @@
+<component-getUserInfo showGetUserInfo="{{showGetUserInfo}}"></component-getUserInfo>
+<component-share pageQRCodeData="{{pageQRCodeData}}"></component-share>
+<import src="../../../components/wxParse/wxParse.wxml" />
+<template name="articleRecommendItem">
+  <view class="recommend-item">
+    <view class="recommend-article" style="width:{{item.style != 1 || item.form_data.url.video ? '70%' : '100%'}};">
+      <view class="recommend-content">{{item.title}}</view>
+      <!-- <view class="recommend-description" wx:if="{{item.style == 1}}">{{item.content}}</view> -->
+      <view class="recommend-adver-footer" wx:if="{{item.article_type == 3}}">
+        <text class="recommend-adver-tag">推荐</text>
+        <time class="recommend-publish-time">{{item.publish_time}}</time>
+      </view>
+      <view wx:else class="recommend-key-words">
+        <text>{{item.comment_count}}评论</text>
+        <text>{{item.publish_time}}</text>
+      </view>
+    </view>
+    <view class="img-wrap" wx:if="{{item.style != 1 || item.form_data.url.video || item.form_data.video[0]}}">
+      <image src="{{item.imgs[0] || item['form_data']['video'][0]['video_url'] || item['form_data']['url']['video']['cover']}}"></image>
+      <view class="icon-wrap" wx:if="{{item['form_data']['url']['video']['cover'] || item['form_data']['video'][0]['video_url']}}">
+        <icon class="ico-moon icon-news-video-play"></icon>
+      </view>
+    </view>
+  </view>
+</template>
+<view class="newsDetail-wrap" id="newsDetail">
+  <view id="news-main">
+    <view class="newsArt-main" wx:if="{{articleInfo.article_type != 1}}">
+      <view wx:if="{{articleInfo.article_type == 2 && articleInfo.form_data.url.article}}">
+        <view class="title">{{articleInfo.form_data.url.article.title}}</view>
+        <view class="article-from">
+          <text class="author" wx:if="{{articleInfo.form_data.url.article.author}}">{{articleInfo.form_data.url.article.author}}</text>
+          <text class="nickname">{{articleInfo.form_data.url.article.nickname}}</text>
+          <text class="publish-time">{{articleInfo.form_data.url.article.publish_time}}</text>
+        </view>
+      </view>
+      <view wx:else>
+        <view class="title">{{articleInfo.title}}</view>
+        <view class="subsidiary">
+          <view class="key-words">
+            <text wx:for="{{articleInfo.keywords}}" wx:key="">{{item}}</text>
+          </view>
+          <view class="publish-time">{{articleInfo.add_time}}</view>
+        </view>
+      </view>
+      <view class="newsDetail-content">
+        <video class="myVideo" wx:if="{{articleInfo.form_data.url.video.url}}" src="{{articleInfo.form_data.url.video.url}}" controls
+  hidden="{{showMask || showReplyBox || showCustom || showRedPocket}}" poster="{{articleInfo.form_data.url.video.cover}}"></video>
+        <template is="wxParse" wx:if="{{contentDescription}}" data="{{ wxParseData: wxParseDescription.nodes }}" />
+        <view class="newsDetail-link-video" wx:if="{{articleInfo.form_data.url.article.type == 4}}">
+          <video class="myVideo" src="{{articleInfo.form_data.url.article.video_url}}" controls
+                 hidden="{{showMask || showReplyBox || showCustom || showRedPocket}}" poster="{{articleInfo.form_data.url.article.cover}}"></video>
+        </view>
+        <wxs module="audioTools">var timeStampChangeTime=function(ts){ts=Math.round(ts);if(ts==0){return"00:00"}var m=parseInt(ts/60),s=ts%60;m=m>9?m:"0"+m;s=s>9?s:"0"+s;return m+":"+s};var playProgress=function(cur,dur){if(!cur||!dur){return"0%"}return Math.round(cur/dur*10000)/100+"%"};module.exports={timeStampChangeTime:timeStampChangeTime,playProgress:playProgress};</wxs>
+        <view wx:if="{{articleInfo.form_data.url.article.type == 3}}" class="newsDetail-link-audio{{innerAudioContext.play ? ' newsDetail-link-audio-play' : ''}}">
+          <view class="audio-logo" bindtap="audioPlayAct"></view>
+          <view class="audio-info">
+            <view class="audio-title">{{articleInfo.form_data.url.article.title}}</view>
+            <view class="audio-progress-bg"><view class="audio-progress" style="width:{{audioTools.playProgress(innerAudioContext.currentTime, innerAudioContext.duration)}}"><text class="audio-progress-point"></text></view></view>
+            <view class="audio-time"><text class="audio-currentTime">{{audioTools.timeStampChangeTime(innerAudioContext.currentTime)}}</text><text class="audio-duration">{{audioTools.timeStampChangeTime(innerAudioContext.duration)}}</text></view>
+          </view>
+        </view>
+      </view>
+      <view wx:if="{{redPocketObject.command}}"><label class="redPocket-command-wrap"><text>红包口令</text>：<text>{{redPocketObject.command}}</text></label></view>
+      <view wx:if="{{articleInfo.article_type == 2}}" class="newsDetail-state">本页面采用应用内搜索技术自动抓取，在为重新编辑原始内容的情
+        况下对版式做了优化，以提升阅读体验。</view>
+      <view class="user-message-wrap" wx:if="{{articleInfo.is_focus == '1'}}">
+        <view class="user-message">
+          <view class="left">
+            <view class="img-wrap">
+              <image src="{{articleInfo.form_data.focus.logo[0]}}" alt="{{articleInfo.form_data.focus.logo[0]}}"></image>
+            </view>
+            <view class="tip-wrap">
+              <text>{{articleInfo.form_data.focus.font}}</text>
+              <view>{{articleInfo.form_data.focus.remark}}</view>
+            </view>
+          </view>
+          <view class="right">
+            <view class="follow-btn">
+              <button open-type="contact" session-from="newsDetail"></button>
+              <text>互动</text>
+            </view>
+          </view>
+        </view>
+      </view>
+      <view class="newsDetail-reward" wx:if="{{articleInfo.is_reward != '0'}}">
+        <view class="reward-play" catchtap='rewardPlay'>赏</view>
+        <view class="reward-total">
+          <view class="reward-count">
+            <text>{{articleInfo.reward_count}}</text> 人已打赏
+          </view>
+          <view class="reward-head-img" wx:if="{{articleInfo.reward_count != 0}}">
+            <view class="img-wrap" wx:for="{{articleInfo.reward_img}}" wx:key="">
+              <image src="{{item}}"></image>
+            </view>
+          </view>
+        </view>
+      </view>
+      <view class="newsDetail-read-count">
+        阅读 {{articleInfo.read_count}}
+      </view>
+    </view>
+    <view class="newsVideo-main" wx:else>
+      <video class="myVideo" src="{{articleInfo.form_data.video[0].video_url}}" controls autoplay='{{!coverThumbShow}}' hidden="{{showMask || showReplyBox || showCustom || showRedPocket}}" poster="{{articleInfo.form_data.video[0].cover_thumb}}"></video>
+      <view wx:if="{{redPocketObject.command}}"><label class="redPocket-command-wrap newsVideo-redPocket-command"><text>红包口令</text>：<text>{{redPocketObject.command}}</text></label></view>
+      <view class="container" style="height: {{ !strech ? auto : strechHeight }};">
+        <view class="title-wrap">
+          <view class="title" style="-webkit-line-clamp: {{ !strech ? 2 : 1 }};">{{articleInfo.title}}</view>
+          <view class="ico-moon {{ !strech ? 'icon-news-up' : 'icon-news-down' }}" style="font-size:12rpx;" bindtap="streching"></view>
+        </view>
+        <view class="newsDetail-content">
+          <template is="wxParse" data="{{ wxParseData: wxParseDescription.nodes }}" />
+        </view>
+      </view>
+      <view class="container">
+        <view class="newsDetail-read-count">
+          {{articleInfo.read_count}}次浏览
+        </view>
+        <view class="publish-time">{{articleInfo.add_time}}</view>
+        <view class="user-message-wrap" wx:if="{{articleInfo.is_focus == '1'}}">
+          <view class="user-message">
+            <view class="left">
+              <view class="img-wrap">
+                <image src="{{articleInfo.form_data.focus.logo[0]}}" alt="{{articleInfo.form_data.focus.logo[0]}}"></image>
+              </view>
+              <view class="tip-wrap">
+                <text>{{articleInfo.form_data.focus.font}}</text>
+                <view>{{articleInfo.form_data.focus.remark}}</view>
+              </view>
+            </view>
+            <view class="right">
+              <view class="follow-btn">
+                <button open-type="contact" session-from="newsDetail"></button>
+                <text>互动</text>
+              </view>
+            </view>
+          </view>
+        </view>
+        <view class="newsDetail-reward" wx:if="{{articleInfo.is_reward != '0'}}">
+          <view class="reward-play" catchtap='rewardPlay'>赏</view>
+          <view class="reward-total">
+            <view class="reward-count">
+              <text>{{articleInfo.reward_count}}</text> 人已打赏
+            </view>
+            <view class="reward-head-img" wx:if="{{articleInfo.reward_count != 0}}">
+              <view class="img-wrap" wx:for="{{articleInfo.reward_img}}" wx:key="">
+                <image src="{{item}}"></image>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view wx:if="{{recItem.recommend_good_type == 3}}" class="newsDetail-recommend" wx:for="{{articleInfo.form_data.recommend}}" wx:key="" wx:for-item="recItem" wx:if="{{articleInfo.is_recommend == 1}}">
+      <view class="more-operations" wx:if="{{recItem.recommend_good_type == 3}}">
+        <view class="title" wx:if="{{recItem.recommend_goods.length != 0}}">更多操作</view>
+        <view class="operations{{recItem.recommend_goods.length < 3 ? recItem.recommend_goods.length : '3'}}" style="{{recItem.recommend_goods.length < 3 ? 'margin-bottom:30rpx;' : ''}}">
+          <view wx:for="{{recItem.recommend_goods}}" wx:key="" wx:for-item="recList">
+            <button class="sharefriends" open-type="share" wx:if="{{recList.action == 'share'}}" data-eventParams="{{recList}}" catchtap="onShareAppMessage">
+              <view class="icon-wrap">
+                <icon wx:if="{{recList.local_icon}}" class="ico-moon icon-news-sharefriends"></icon>
+                <image wx:else src="{{recList.iconImg}}"></image>
+              </view>
+              <view class="name">分享好友</view>
+            </button>
+            <view class="concat-custom" wx:elif="{{recList.action == 'contact'}}">
+              <view class="icon-wrap">
+                <icon wx:if="{{recList.local_icon}}" class="ico-moon icon-news-custom"></icon>
+                <image wx:else src="{{recList.iconImg}}"></image>
+                <button open-type="contact" session-from="newsDetail"></button>
+              </view>
+              <view class="name">联系客服</view>
+            </view>
+            <view wx:elif="{{recList.action == 'turn-to-xcx'}}">
+              <navigator target="miniProgram" open-type="navigate" app-id="{{recList['xcx-appid']}}" path="{{recList['xcx-page-url']}}" extra-data="" version="release">
+                <view class="icon-wrap">
+                  <icon wx:if="{{recList.local_icon}}" class="ico-moon {{recList.local_icon}}"></icon>
+                  <image wx:else src="{{recList.iconImg}}"></image>
+                </view>
+                <view class="name">{{recList.name}}</view>
+              </navigator>
+            </view>
+            <view wx:else catchtap="bindEventTapHandler" data-event-params="{{recList}}">
+              <view class="icon-wrap">
+                <icon wx:if="{{recList.local_icon}}" class="ico-moon {{recList.local_icon}}"></icon>
+                <image wx:else src="{{recList.iconImg}}"></image>
+              </view>
+              <view class="name">{{recList.name}}</view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class="newsDetail-recommend" wx:for="{{articleInfo.form_data.recommend}}" wx:key="" wx:for-item="recItem" wx:if="{{articleInfo.is_recommend == 1}}">
+      <view class="recommmend-list" wx:if="{{recItem.recommend_good_type == 0 && recItem.recommend_goods.length > 0}}">
+        <view class="catalog">推荐文章</view>
+        <view wx:for="{{recItem.recommend_goods}}" wx:key="{{item.id}}" wx:if="{{item.is_publish == 1}}">
+          <navigator wx:if="{{item.article_type == 3 && item.form_data.event.action == 'turn-to-xcx'}}" target="miniProgram" open-type="navigate" app-id="{{item.form_data.event['xcx-appid']}}" path="{{item.form_data.event['xcx-page-url']}}" extra-data="" version="release">
+            <template is="articleRecommendItem" data="{{item}}"></template>
+          </navigator>
+          <view wx:elif="{{item.article_type == 3 && item.form_data.event.action == 'share'}}">
+            <button class="news-share-button" open-type="share" data-eventParams="{{newsItem.event_params}}" catchtap="onShareAppMessage">
+              <template is="articleRecommendItem" data="{{item}}"></template>
+            </button>
+          </view>
+          <view wx:elif="{{item.article_type == 3 && item.form_data.event.action == 'contact'}}">
+            <view class="contact-button">
+              <button open-type="contact" session-from="newsDetail"></button>
+              <template is="articleRecommendItem" data="{{item}}"></template>
+            </view>
+          </view>
+          <view wx:else data-id="{{item.id}}" catchtap="turnToArticle" data-article-type="{{item.article_type}}" data-event-params="{{item.event_params}}">
+            <template is="articleRecommendItem" data="{{item}}"></template>
+          </view>
+        </view>
+      </view>
+      <view class="recommmend-list goods-list" wx:elif="{{recItem.recommend_good_type == 1 && recItem.recommend_goods.length > 0}}">
+        <view class="catalog">推荐商品</view>
+        <view class="recommend-item" wx:for="{{recItem.recommend_goods}}" data-id="{{item.id}}" catchtap="turnToGoodsDetail" data-style="{{item.goods_type}}" wx:key="">
+          <view>
+            <view class="img-wrap">
+              <image src="{{item.cover}}"></image>
+            </view>
+            <view class="recommend-article">
+              <view class="recommend-content">{{item.title}}</view>
+              <view class="recommend-goods-price">
+                <text style="color:#FC4541;">¥ {{item.price}}</text>
+              </view>
+              <view class="recommend-goods-sales" style="color:#999;font-size:20rpx;margin-bottom:0;">月销{{item.sales}}件</view>
+            </view>
+          </view>
+        </view>
+      </view>
+      <view class="recommmend-list" wx:elif="{{recItem.recommend_good_type == 2 && recItem.recommend_goods.length > 0}}" style="padding: 20rpx 30rpx;">
+        <view class="catalog">优惠券</view>
+        <block wx:for="{{recItem.recommend_goods}}" wx:for-item="coupon" wx:key="">
+          <view class="ticket" catchtap="gotoCouponDetail" data-coupon-id="{{ coupon.id }}">
+            <view class="top-section" style="{{ 'border-color: ' + coupon.list_color }}">
+              <block wx:if="{{ coupon.type == 0 }}">
+                <view class="detail-info">
+                  <view class="name">{{ coupon.title }}</view>
+                  <view class="use-condition">使用条件：满{{ coupon.condition }}元，减{{ coupon.value }}元</view>
+                </view>
+                <view class="background-word-area" style="{{ 'border-color:' + coupon.list_color }}">
+                  <view class="background-circle" style="{{ 'background-color:' + coupon.list_color }}"></view>
+                  <view class="background-word">减</view>
+                </view>
+              </block>
+              <block wx:elif="{{ coupon.type == 1 }}">
+                <view class="detail-info">
+                  <view class="name">{{ coupon.title }}</view>
+                  <view class="use-condition">使用条件: 打{{ coupon.value }}折</view>
+                </view>
+                <view class="background-word-area" style="{{ 'border-color:' + coupon.list_color }}">
+                  <view class="background-circle" style="{{ 'background-color:' + coupon.list_color }}"></view>
+                  <view class="background-word">折</view>
+                </view>
+              </block>
+              <block wx:elif="{{ coupon.type == 2 }}">
+                <view class="detail-info">
+                  <view class="name">{{ coupon.title }}</view>
+                  <view class="use-condition">使用条件：可抵扣{{ coupon.value }}元</view>
+                </view>
+                <view class="background-word-area" style="{{ 'border-color:' + coupon.list_color }}">
+                  <view class="background-circle" style="{{ 'background-color:' + coupon.list_color }}"></view>
+                  <view class="background-word">代</view>
+                </view>
+              </block>
+              <block wx:elif="{{ coupon.type == 3 }}">
+                <view class="detail-info">
+                  <view class="name">{{ coupon.title }}</view>
+                  <view class="use-condition" wx:if="{{ coupon.extra_condition == '' }}">使用条件：直接兑换{{ coupon.coupon_goods_info.title }} </view>
+                  <view class="use-condition" wx:elif="{{ coupon.extra_condition.price }}">使用条件：消费满{{ coupon.extra_condition.price }}元可兑换{{ coupon.coupon_goods_info.title }}</view>
+                  <view class="use-condition" wx:elif="{{ coupon.extra_condition.goods_id }}">使用条件：购买{{ coupon.condition_goods_info.title }}可兑换{{ coupon.coupon_goods_info.title }}</view>
+                </view>
+                <view class="background-word-area" style="{{ 'border-color:' + coupon.list_color }}">
+                  <view class="background-circle" style="{{ 'background-color:' + coupon.list_color }}"></view>
+                  <view class="background-word">兑</view>
+                </view>
+              </block>
+              <block wx:elif="{{ coupon.type == 4 }}">
+                <view class="detail-info">
+                  <view class="name">{{ coupon.title }}</view>
+                  <view class="use-condition">使用条件: 储值金可充值{{ coupon.value }}元</view>
+                </view>
+                <view class="background-word-area" style="{{ 'border-color:' + coupon.list_color }}">
+                  <view class="background-circle" style="{{ 'background-color:' + coupon.list_color }}"></view>
+                  <view class="background-word">储</view>
+                </view>
+              </block>
+              <block wx:elif="{{ coupon.type == 5 }}">
+                <view class="detail-info">
+                  <view class="name">{{ coupon.title }}</view>
+                  <view class="use-condition">使用条件: {{ coupon.extra_condition }}</view>
+                </view>
+                <view class="background-word-area" style="{{ 'border-color:' + coupon.list_color }}">
+                  <view class="background-circle" style="{{ 'background-color:' + coupon.list_color }}"></view>
+                  <view class="background-word">通</view>
+                </view>
+              </block>
+              <view class="receive-btn" catchtap="gotoCouponDetail" data-coupon-id="{{ coupon.id }}" style="{{ 'background-color:' + coupon.list_color }}">领取</view>
+            </view>
+            <view class="bottom-section">
+              <view>有效期 {{ coupon.start_use_date }}至{{ coupon.end_use_date }} {{ coupon.exclude_holiday == 0 ? '':'除去法定节假日'}} {{coupon.exclude_weekend == 0 ? '':'周一至周五'}} {{ coupon.start_use_time }}-{{ coupon.end_use_time }}</view>
+            </view>
+          </view>
+        </block>
+      </view>
+    </view>
+  </view>
+  <view wx:if="{{wechatAdver}}" class="wechat-adver-section">
+    <view wx:for="{{wechatAdver}}" wx:key="{{index}}">
+      <ad unit-id="{{item.wechat_id}}"></ad>
+    </view>
+  </view>
+  <view class="newsDetail-art">
+    <view class="newsDetail-all-post" id="newsDetail-all-post">
+      <view>全部评论 {{commentCount}}</view>
+      <view wx:if="{{articleInfo.like_count != 0}}">
+        <text>{{articleInfo.like_count}}</text> 赞
+      </view>
+    </view>
+    <view class="newsDetail-list" style='background:{{getCommentData.nomore && commentList.length <= 0 ? "#eee":"#fff"}};'>
+      <view class="newsDetail-ul">
+        <view wx:for="{{commentList}}" wx:key="" class="newsDetail-item" data-id="{{item.id}}">
+          <view>
+            <view class="news-li-cover">
+              <image src="{{item.headimgurl}}"></image>
+            </view>
+            <view class="news-li-author">
+              <text class="news-li-name" data-id="{{item.id}}">{{item.nickname}}</text>
+              <text class="newsDetail-floor">{{index + 1}}楼</text>
+              <text class="news-li-time">{{item.add_time}}</text>
+            </view>
+            <view class="newsDetail-item-right-top">
+              <view class="newsDetail-item-like tail-info" data-liked="{{item.is_liked}}" data-id="{{item.id}}" data-index="{{index}}" data-like-count="{{item.like_count}}" catchtap="commentLike">
+                <icon class="ico-moon {{item.is_liked == 1 ? 'icon-community_praise_fill' : 'icon-community_praise'}}"></icon>
+                <text>{{item.like_count_text}}</text>
+                <view hidden="{{item.likeAnimateShow}}" class="like-animate">{{item.is_liked == 1 ? '+1' : '-1'}}</view>
+              </view>
+            </view>
+          </view>
+          <view class="newsDetail-item-content" data-id="{{item.id}}" data-sectionid="{{item.section_id}}" data-parentid="{{item.coment_id}}" data-replyto="{{item.nickname}}" catchtap="turnReply">
+            <text>{{item.content}}</text>
+            <view class="newsDetail-reply-wrap" wx:if="{{item.author_reply.data.length > 0}}">
+              <view class="newsDetail-reply" wx:for="{{item.author_reply.data}}" wx:for-item="authorReply" wx:key="">
+                <view>作者回复：</view>
+                <view>{{authorReply.content}}</view>
+              </view>
+            </view>
+          </view>
+        </view>
+        <view wx:if="{{getCommentData.nomore && commentList.length <= 0}}" class="newsDetail-li-none">
+          <icon class="ico-moon icon-no-criticism noCriticism"></icon>
+          <view>暂无评论</view>
+        </view>
+        <view wx:if="{{getCommentData.nomore && commentList.length > 0}}" class="newsDetail-li-nomore">没有更多了</view>
+      </view>
+    </view>
+  </view>
+  <view class="newsDetail-bottom" hidden="{{showReplyBox}}">
+    <icon class="newsDetail-likebtn2 ico-moon icon-leftarrow" catchtap='historyBack'></icon>
+    <button class="newsDetail-btn" data-sectionid="{{articleInfo.section_id}}" catchtap="turnComment" data-replyto="我来说两句" data-id="0" data-parentid="0" >来说说我的看法...</button>
+    <view class="reply-wrap" data-id="newsDetail-all-post" bindtap='scrollTo'>
+      <icon class="newsDetail-likebtn2 ico-moon icon-community_message"></icon>
+      <view wx:if="{{articleInfo.comment_count > 0}}">{{articleInfo.comment_count}}</view>
+    </view>
+    <icon class="newsDetail-likebtn2 ico-moon {{articleInfo.is_liked == 1 ? 'icon-community_praise_fill' : 'icon-community_praise'}}" data-liked="{{articleInfo.is_liked}}" catchtap="articleLike" data-like-count="{{articleInfo.like_count}}" style="color:{{articleInfo.is_liked == 1 ? '#F85959': ''}};"></icon>
+    <button class="button-share" open-type="share">
+      <icon class="newsDetail-likebtn2 ico-moon icon-community_share"></icon>
+    </button>
+    <view class="newsDetail-phone" wx:if="{{phoneNumber}}" catchtap="makePhone">联系Ta</view>
+  </view>
+</view>
+<view class="detail-reward-mask" hidden="{{!showMask}}">
+  <view class="detail-cancel" catchtap='rewardCancel'>
+  </view>
+  <view class="detail-reward-play">
+    <view class="img-wrap">
+      <image wx:if="{{articleInfo.xcx_qr_code}}" src="{{articleInfo.xcx_qr_code}}" ></image>
+      <view>{{articleInfo.app_name}}</view>
+    </view>
+    <view class="price-select">
+      <radio-group bindchange="radioCheckedChange">
+        <view class="price-select-list flex_box">
+          <view catchtap='payPrice' data-price="1">
+            <view class="flex_item">
+              <label class="{{radioCheckVal==1?'active':''}}"> 1元
+                <radio hidden="true" value="1"></radio>
+              </label>
+            </view>
+          </view>
+          <view catchtap='payPrice' data-price="5">
+            <view class="flex_item">
+              <label class="{{radioCheckVal==5?'active':''}}"> 5元
+                <radio hidden="true" value="5"></radio>
+              </label>
+            </view>
+          </view>
+          <view catchtap='payPrice' data-price="10">
+            <view class="flex_item">
+              <label class="{{radioCheckVal==10?'active':''}}"> 10元
+                <radio hidden="true" value="10"></radio>
+              </label>
+            </view>
+          </view>
+          <view catchtap='payPrice' data-price="20">
+            <view class="flex_item">
+              <label class="{{radioCheckVal==20?'active':''}}"> 20元
+                <radio hidden="true" value="20"></radio>
+              </label>
+            </view>
+          </view>
+          <view catchtap='payPrice' data-price="50">
+            <view class="flex_item">
+              <label class="{{radioCheckVal==50?'active':''}}"> 50元
+                <radio hidden="true" value="50"></radio>
+              </label>
+            </view>
+          </view>
+          <view class="custom" catchtap='customByReward'>自定义</view>
+        </view>
+      </radio-group>
+    </view>
+    <view class="method">
+      <text>支付方式</text>
+      <view class="weixin-play">
+        <icon class="ico-moon icon-weixin-pay weixin-pay"></icon>
+        <text>微信支付</text>
+      </view>
+    </view>
+    <form report-submit="true" bindsubmit="confirmationOfpayment">
+      <button formType="submit" class="confirmationOfpayment">确认支付</button>
+    </form>
+  </view>
+</view>
+<view class="price-custom-mask" hidden="{{!showCustom}}">
+  <view class="price-custom">
+    <view class="title">
+      <icon class="ico-moon icon-closes newsDetail-closes" catchtap='cancelPay'></icon>
+      <text>自定义金额</text>
+    </view>
+    <view class="price-value">
+      <view class="prompt">金额(元)</view>
+      <input bindinput="customPriceBlur" class="" placeholder="可填写1-200" />
+    </view>
+    <form report-submit="true" bindsubmit="confirmationOfpayment">
+      <button formType="submit" class="confirmationOfpayment">确认支付</button>
+    </form>
+  </view>
+</view>
+<view class="communityDetail-reply-mask" hidden="{{!showReplyBox}}" catchtouchmove=" ">
+  <view class="communityDetail-reply-box" style="bottom:{{replyBoxFocus ? keyboardHeight : '0'}}; transform: {{replyBoxFocus && keyboardHeight === '50%' ? 'translateY(30%)' : 'translateY(0)'}};">
+    <view class="reply-box-top">
+      <text class="cancel-reply" catchtap="cancelReply">取消</text>
+      <text class="publish-reply" catchtap="submitReply" style="color:{{replyParam['content'] ? '#3091f2' : '#999'}}">发表</text>
+    </view>
+    <view>
+      <textarea class="article-reply-input" id="" placeholder="{{replyPlaceholder}}" maxlength="-1" value="{{replyContent}}" bindinput="replyInput" bindfocus="replyFocus" bindblur="replyBlur" placeholder-style="color: #999" focus="{{replyBoxFocus}}" show-confirm-bar="{{false}}" cursor="0" adjust-position="{{false}}" fixed="{{true}}"></textarea>
+    </view>
+  </view>
+</view>
+
+<!-- 话费红包 -->
+<view wx:if="{{haveRedPocket}}" class="open-pocket-suspension" catchtap="showRedPocketAct"><image mode="aspectFill" src="{{cdnUrl +'/zhichi_frontend/static/webapp/images/pocket/get_pocket.png'}}" alt=""></image></view>
+<view wx:if="{{showRedPocket}}" class="redPocket-bgmask" catchtouchmove="stopPropagation">
+  <view wx:if="{{redPocketStatus == 0}}" class="redPocket-openPocket" style="{{'background-image: url('+ cdnUrl +'/zhichi_frontend/static/webapp/images/pocket/open_pocket.png);'}}">
+    <label class="close-btn ico-moon icon-closes" catchtap="closeRedPocketModal"></label>
+    <view class="openPocket-inner">
+      <view class="openPocket-from">来自 <text>{{articleInfo.app_name || articleInfo.nickname}}</text></view>
+      <view class="openPocket-password-input" animation="{{redPocketAnimation}}"><input type="text" placeholder="输入口令" style="{{'display:'+ (redAnimate ? 'none;' : 'block;')}}" placeholder-style="color: #ED453A;text-align: center;" bindinput="redPocketCmmandInput" bindblur="redPocketCmmandBlur" value="{{redPocketUserInput}}"/><text style="{{'display:'+ (redAnimate ? 'block;' : 'none;')}}">口令输入错误</text></view>
+      <view class="openPocket-tip">需要输入口令才能抢哦~</view>
+      <view class="openPocket-openBtn" catchtap="openRedPocketAct"></view>
+    </view>
+  </view>
+  <view wx:if="{{redPocketStatus == 1}}" class="redPocket-pocketOpened" style="{{'background-image: url('+ cdnUrl +'/zhichi_frontend/static/webapp/images/pocket/opened_pocket.png);'}}">
+    <label class="close-btn ico-moon icon-closes" catchtap="closeRedPocketModal"></label>
+    <view class="pocketOpened-inner">
+      <view class="pocketOpened-title">口令话费</view>
+      <view class="pocketOpened-cash">{{redPocketObject.grab_money}}<text class="cash-unit">元</text></view>
+      <view class="pocketOpened-image"><image mode="aspectFill" src="{{articleInfo.app_logo || articleInfo.app_cover || articleInfo.headimgurl}}" alt=""></image></view>
+      <view class="pocketOpened-from">来自 <text>{{articleInfo.app_name || articleInfo.nickname}}</text></view>
+      <view class="pocketOpened-tip">你己领取过这个话费红包了~</view>
+      <view class="opened-detail-btn" catchtap="turnToRedPocketDetail">查看领取详情 ></view>
+    </view>
+  </view>
+  <view wx:if="{{redPocketStatus == 2}}" class="redPocket-openLate" style="{{'background-image: url('+ cdnUrl +'/zhichi_frontend/static/webapp/images/pocket/late_pocket.png);'}}">
+    <label class="close-btn ico-moon icon-closes" catchtap="closeRedPocketModal"></label>
+    <view class="openLate-inner">
+      <view class="openLate-title">口令话费</view>
+      <view class="openLate-desc">来晚一步，领完啦~</view>
+      <view class="openLate-image"><image mode="aspectFill" src="{{articleInfo.app_logo || articleInfo.app_cover || articleInfo.headimgurl}}" alt=""></image></view>
+      <view class="openLate-from">来自 <text>{{articleInfo.app_name || articleInfo.nickname}}</text></view>
+      <view class="opened-detail-btn" catchtap="turnToRedPocketDetail">查看领取详情 ></view>
+    </view>
+  </view>
+</view>

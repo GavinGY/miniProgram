@@ -1,0 +1,28 @@
+<component-getUserInfo showGetUserInfo="{{showGetUserInfo}}"></component-getUserInfo>
+<view class="menu-list">
+  <view data-type="0" class="{{ currentType == 0 ? 'active' : ''}}" bindtap="changeMenu">电商</view>
+  <view data-type="3" class="{{ currentType == 3 ? 'active' : ''}}" bindtap="changeMenu">到店</view>
+</view>
+<view class="table-header">
+  <view>商品名称</view>
+  <view>价格</view>
+  <view>推广销量</view>
+  <view>一级佣金</view>
+  <view wx:if="{{ isHaveSecondCommission }}">二级佣金</view>
+</view>
+<view class="table-section">
+  <view class="table-row" wx:for="{{ goodsArr }}" wx:key="">
+    <view class="table-cell">{{ item.title }}</view>
+    <view class="table-cell">{{ item.price }}</view>
+    <view class="table-cell">{{ item.commission_setting ? item.commission_setting.sold : 0}}</view>
+    <view class="table-cell">{{ (item.commission_setting && item.commission_setting.is_custom_commission == 1) ? (item.commission_setting.commission_type == 0 ? (item.commission_setting.first_commission + '%') : item.commission_setting.first_commission) : item.first_commission + '%' }}</view>
+    <view class="table-cell" wx:if="{{ isHaveSecondCommission }}">{{ (item.commission_setting && item.commission_setting.is_custom_commission == 1) ? (item.commission_setting.commission_type == 0 ? (item.commission_setting.second_commission + '%') : item.commission_setting.second_commission) : item.second_commission + '%' }}</view>
+  </view>
+</view>
+<view class="navigator-footer" wx:if="{{ totalPage > 1 }}">
+  <view class="navitaor-btn" bindtap="prevPage">上一页</view>
+  <text>{{ currentPage || 1 }}/{{ totalPage || 1 }}</text>
+  <view class="navitaor-btn" bindtap="nextPage">下一页</view>
+</view>
+
+

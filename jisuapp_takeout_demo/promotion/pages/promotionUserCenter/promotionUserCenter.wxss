@@ -1,0 +1,89 @@
+page {
+  padding-bottom: 30rpx;
+  background-color: #f4f4f4;
+}
+.top-section {
+  padding: 32rpx;
+  margin-bottom: 20rpx;
+  background-color: #fff;
+}
+.top-section image {
+  margin-right: 24rpx;
+  width: 132rpx;
+  height: 132rpx;
+  border-radius: 50%;
+  vertical-align: middle;
+}
+.top-section .top-section-detail {
+  display: inline-block;
+  vertical-align: middle;
+}
+.top-section .ico-moon {
+  margin-top: 40rpx;
+  display: inline-block;
+  vertical-align: middle;
+  color: #ccc;
+}
+.middle-section {
+  margin-bottom: 20rpx;
+  padding: 30rpx 42rpx;
+  font-size: 32rpx;
+  background-color: #fff;
+}
+.withdraw-btn {
+  float: right;
+  margin-top: 14rpx;
+  width: 138rpx;
+  height: 50rpx;
+  line-height: 50rpx;
+  font-size: 28rpx;
+  border-radius: 4px;
+  border: 1px solid;
+  text-align: center;
+  color: #EE5A10;
+  background: #fff;
+}
+.current-commission {
+  margin: 0 20rpx;
+}
+.current-commission, .history-commission {
+  color: #ff7100;
+}
+.bottom-section {
+  font-size: 24rpx;
+  text-align: center;
+  color: #666;
+  background-color: #fff;
+}
+.bottom-section-item {
+  display: -webkit-flex;
+  display: flex;
+  flex-wrap: wrap;
+}
+.bottom-section-item:last-child {
+  border-right: none;
+}
+.bottom-section-item .ico-moon {
+  margin-bottom: 28rpx;
+  font-size: 70rpx;
+  color: #FF7100;
+}
+.bottom-sub-item {
+  width: 33.3%;
+  padding: 36rpx 0;
+  border: 1px solid #f4f4f4;
+  box-sizing:border-box;
+}
+.promotion-btn {
+  position: fixed;
+  bottom: 30rpx;
+  left: 30rpx;
+  right: 30rpx;
+  height: 88rpx;
+  line-height: 88rpx;
+  font-size: 36rpx;
+  border-radius: 4px;
+  color: #fff;
+  background-color: #ff7100;
+  text-align: center;
+}

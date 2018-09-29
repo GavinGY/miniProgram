@@ -1,0 +1,69 @@
+page {
+  padding: 60rpx 30rpx 60rpx 50rpx;
+}
+.order-block {
+  position:relative;
+  height: 120rpx;
+  width: 670rpx;
+}
+.order-block:first-child .order-point {
+  background-color:#ff7100;
+  border:20rpx solid #ffe3cd;
+  margin-left:0;
+  width:22rpx;
+  height:22rpx;
+  margin-top: 0;
+}
+.order-point {
+  display: inline-block;
+  width: 16rpx;
+  height: 16rpx;
+  border-radius: 50%;
+  background-color: #D4D5DE;
+  vertical-align: top;
+  margin-top: 16rpx;
+  margin-left: 22rpx; 
+  z-index:2;
+  position:relative;
+}
+.order-content {
+  margin-left: 44rpx;
+  display: inline-block;
+  width: 562rpx;
+  vertical-align: top;
+}
+.order-block:first-child .order-content{
+  margin-left: 16rpx;
+}
+.order-block:not(:last-child) .order-line {
+  width: 1px;
+  height: 100%;
+  position: absolute;
+  background-color: #D4D5DE;
+  top: 16rpx;
+  left: 30rpx;
+  z-index: 1;
+}
+.order-message {
+  display: inline-block;
+  width: 342rpx;
+  vertical-align: top;
+  color: #333;
+  font-size: 30rpx;
+}
+.order-block:first-child .order-message {
+  margin-top: 10rpx;
+  color: #ff7100;
+}
+.order-time {
+  width: 220rpx;
+  vertical-align: top;
+  font-size: 22rpx;
+  color: #999;
+  float: right;
+  margin-top: 10rpx;
+}
+.order-block:first-child .order-time {
+  color: #ff7100;
+  margin-top: 20rpx;
+}
