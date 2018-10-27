@@ -1,0 +1,21 @@
+page {
+    background-color: #EFEFF4;
+}
+
+.seller3 {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    padding-top: 200rpx;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+}
+
+.seller_img {
+    width: 459rpx;
+    height: 320rpx;
+}

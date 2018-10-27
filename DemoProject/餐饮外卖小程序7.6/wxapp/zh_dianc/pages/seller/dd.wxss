@@ -1,0 +1,116 @@
+@import "template.wxss";
+
+page {
+    background-color: #f5f5f5;
+}
+
+.weui-cells_after-title {
+    margin-top: 1.2em;
+}
+
+.weui-cells {
+    font-size: 35rpx;
+}
+
+.weui-cell__hd image {
+    width: 80rpx;
+    height: 80rpx;
+    margin-right: 50rpx;
+}
+
+.weui-cell__ft_in-access:after {
+    width: 30rpx;
+    height: 30rpx;
+}
+
+.main {
+    margin: auto 30rpx;
+    padding: 100rpx 0;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+}
+
+.ddbk {
+    width: 280rpx;
+    height: 280rpx;
+    box-sizing: border-box;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -ms-flex-pack: distribute;
+    justify-content: space-around;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    background: #fff;
+    margin: 20rpx 20rpx;
+    border-radius: 30rpx;
+    padding: 20rpx 10rpx;
+}
+
+.ddimg {
+    width: 140rpx;
+    height: 140rpx;
+}
+
+.ddwz1 {
+    font-size: 30rpx;
+    color: #fff;
+}
+
+.ddwz2 {
+    font-size: 30rpx;
+    color: #fff;
+}
+
+.ddwz3 {
+    font-size: 30rpx;
+    color: #fff;
+}
+
+.ddwz4 {
+    font-size: 30rpx;
+    color: #fff;
+}
+
+.dqmd {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    font-size: 30rpx;
+    color: #333;
+}
+
+.dqmd image {
+    width: 80rpx;
+    height: 80rpx;
+    margin: 20rpx;
+    border-radius: 50%;
+}

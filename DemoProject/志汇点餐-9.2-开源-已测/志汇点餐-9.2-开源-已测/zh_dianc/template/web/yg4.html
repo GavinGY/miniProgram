@@ -1,0 +1,133 @@
+{template 'public/header'}
+{template 'public/comhead'}
+<style type="text/css">
+    .nav-tabs>li>a:hover{
+        color: #333;
+        border-color: #31C2A5;
+        background-color: white;
+    }
+    .nav-tabs > li.active > a,.nav-tabs > li.active > a:hover{
+        background-color: #31C2A5;
+        color: white;
+        border-color: #31C2A5;
+    }
+    .nav.nav-tabs{border-color: #31C2A5;margin-top: 30px;}
+    .yg5_key>div{float: left;line-height: 34px;}
+    .store_td1{height: 45px;}
+    .store_list_img{width: 60px;height: 60px;}
+    .yg5_tabel{border-color: #e5e5e5;outline: 1px solid #e5e5e5;}
+    .yg5_tr2>td{padding: 15px;border: 1px solid #e5e5e5;text-align: center;}
+    .yg5_tr1>td{
+        border: 1px solid #e5e5e5;
+        padding-left: 15px;
+        background-color: #FAFAFA;
+        font-weight: bold;
+        text-align: center;
+    }
+    .yg5_trspan>span{margin-bottom: 10px;}
+    .yg5_tr2>td:nth-child(5){color: #31C2A5;}
+    .yg5_tr2>td:nth-child(6){color: #31C2A5;}
+    .yg5_btn{background-color: #EEEEEE;color: #333;border: 1px solid #E4E4E4;border-radius: 6px;width: 100px;height: 34px;}
+</style>
+<ul class="nav nav-tabs">    
+    <li><a href="{php echo $this->createWebUrl('store')}">门店管理</a></li>
+    <li><a href="{php echo $this->createWebUrl('addstore')}">门店添加</a></li>
+    <li class="active"><a href="{php echo $this->createWebUrl('yg4')}">门店回收站</a></li>
+</ul>
+<div class="main">
+    <form action="" method="post" class="form-horizontal form" enctype="multipart/form-data" id="invitative">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                门店管理&nbsp;>&nbsp;筛选查询
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    
+                    <form action="" method="POST">
+                        <div class="col-md-3 yg5_key">
+                            <div>输入关键字：</div>
+                            <div class="input-group" style="width: 200px">                                
+                                <input type="text" name="keywords" class="form-control" placeholder="请输入姓名/账号">
+                            </div>
+                        </div>
+                        <div class="col-md-3 yg5_key">
+                            <div>门店类型：</div>
+                            <select class="input-group" style="width: 200px">                                
+                                <option>自助餐</option>
+                                <option>海鲜店</option>
+                                <option>牛肉面馆</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 yg5_key">
+                            <div>所属区域：</div>
+                            <select class="input-group" style="width: 200px">                                
+                                <option>武汉</option>
+                                <option>孝感</option>
+                                <option>黄石</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3"></div>
+                        <div class="input-group" style="width: 100px">
+                            <input type="submit" class="btn yg5_btn" name="submit2" value="搜索"/>
+                        </div><!-- /input-group -->
+                    </form>
+                </div>  
+            </div>
+        </div>
+
+        <!-- 门店列表部分开始 -->
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                门店列表
+            </div>
+            <div class="panel-body" style="padding: 0px 15px;">
+                <div class="row">
+                    <table class="yg5_tabel col-md-12">
+                        <tr class="yg5_tr1">
+                            <td class="store_td1 col-lg-1">顺序</td>
+
+                            <td class="col-lg-2">门店名称</td>
+                            <td class="col-lg-1">门店类型</td>
+
+                            <td class="col-lg-3">订餐类型</td>
+                            <td class="col-lg-2">快捷管理</td>
+                            <td class="col-lg-1">生成链接</td>
+                            <td class="col-lg-1">门店状态</td>
+
+                            <td class="col-lg-1">操作</td>
+                        </tr>
+                        <tr class="yg5_tr2">
+                            <td><div>1</div></td>
+                            <td>
+                                <img class="store_list_img" src="https://img14.360buyimg.com/n0/jfs/t8296/136/858160093/346941/42857e6f/59b0afacN86e80c67.jpg" alt=""/>
+                                <span>海鲜美食城</span>
+                            </td>
+                            <td>店内点餐</td>
+                            <td class="yg5_trspan">
+                                <span class="btn btn-sm btn-info">店内</span>
+                                <span class="btn btn-sm btn-warning">外卖</span>
+                                <span class="btn btn-sm btn-danger">快餐</span>
+                                <span class="btn btn-sm btn-info">预订</span>
+                                <span class="btn btn-sm btn-danger">排队</span>
+                                <span class="btn btn-sm btn-warning">存酒</span>
+                                <span class="btn btn-sm btn-info">套餐</span>
+                            </td>
+                            <td>
+                                <span>商品</span>
+                                <span>分类</span>
+                                <span>店长</span>
+                            </td>
+                            <td>门店链接</td>
+                            <td>
+                            	<a href="javascript:void(0);" class="btn btn-sm btn-success">开启</a>
+                            	<a href="javascript:void(0);" class="btn btn-sm btn-danger">关闭</a>
+                            </td>
+                            <td><a href="javascript:void(0);" class="btn btn-sm btn-info">还原</a></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+{template 'common/footer'}
